@@ -1,1 +1,7 @@
 dotnet ef migrations add InitialCreate -- criar migration
+
+
+.InsertOneAsync -- Create
+.Find(_ => true).ToListAsync(); -- GetAll
+.Find(u => u.Id == id).FirstOrDefaultAsync(); -- GetUnique
+.DeleteOneAsync(u => u.Id == id); -- Delete

@@ -125,3 +125,4 @@
 /home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/SharpCompress.dll
 /home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Snappier.dll
 /home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/ZstdSharp.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/obj/Debug/net9.0/WebApi2026.sourcelink.json

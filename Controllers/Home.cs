@@ -8,12 +8,9 @@ namespace WebApi2026.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("")]
     public class Teste : ControllerBase
     {
-
-        private static readonly string[] clubesRJ = new[] { "Botafogo", "Flamengo", "Vasco", "Fluminense" };
-
 
         [HttpGet]
         public IActionResult GetHTML()
