@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi2026.Controllers
@@ -12,6 +13,7 @@ namespace WebApi2026.Controllers
     public class Teste : ControllerBase
     {
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetHTML()
         {

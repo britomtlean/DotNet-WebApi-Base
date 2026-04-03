@@ -126,3 +126,11 @@
 /home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Snappier.dll
 /home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/ZstdSharp.dll
 /home/mtlean/Documentos/Projects/DOTNET/WebApi2026/obj/Debug/net9.0/WebApi2026.sourcelink.json
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi2026.Entities;
 using WebApi2026.Interfaces;
@@ -29,6 +30,7 @@ namespace WebApi2026.Controllers
             return Ok(usuario);
         }
 
+        [Authorize]
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {

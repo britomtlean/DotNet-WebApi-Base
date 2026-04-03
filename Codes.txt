@@ -5,3 +5,7 @@ dotnet ef migrations add InitialCreate -- criar migration
 .Find(_ => true).ToListAsync(); -- GetAll
 .Find(u => u.Id == id).FirstOrDefaultAsync(); -- GetUnique
 .DeleteOneAsync(u => u.Id == id); -- Delete
+
+
+PACKEGES
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0
