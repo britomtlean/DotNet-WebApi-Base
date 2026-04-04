@@ -1,6 +1,6 @@
 dotnet ef migrations add InitialCreate -- criar migration
 
-
+MONGO
 .InsertOneAsync -- Create
 .Find(_ => true).ToListAsync(); -- GetAll
 .Find(u => u.Id == id).FirstOrDefaultAsync(); -- GetUnique
@@ -8,4 +8,9 @@ dotnet ef migrations add InitialCreate -- criar migration
 
 
 PACKEGES
+dotnet add package Microsoft.AspNetCore.OpenApi --version 9.0.4
+dotnet add package Microsoft.EntityFrameworkCore --version 9.0.0
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 9.0.0
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 9.0.0
+dotnet add package MongoDB.Driver --version 3.7.1
 dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0

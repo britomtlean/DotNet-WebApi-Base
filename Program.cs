@@ -24,6 +24,7 @@ builder.Services.Configure<MongoDbSettings>(
 
 // Contexto do Mongo (substitui o AddDbContext<>())
 builder.Services.AddSingleton<AppDbContext>();
+builder.Services.AddScoped<IGastoMensalService, GastoMensalService>();
 
 // Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();

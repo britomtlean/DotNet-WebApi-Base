@@ -34,5 +34,9 @@ namespace WebApi2026.Context
         public IMongoCollection<Usuario> Usuarios =>
     _database.GetCollection<Usuario>("Usuarios");
 
+
+        public IMongoCollection<GastoMensal> GastosMensais =>
+            _database.GetCollection<GastoMensal>("GastosMensais");
+
     }
 }
