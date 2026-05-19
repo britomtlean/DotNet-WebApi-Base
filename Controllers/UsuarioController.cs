@@ -14,10 +14,13 @@ namespace WebApi2026.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _service;
+
         public UsuarioController(IUsuarioService service)
         {
             this._service = service;
         }
+
+        //////////////////////////// ROUTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] Usuario usuario)

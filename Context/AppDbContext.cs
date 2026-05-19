@@ -32,11 +32,14 @@ namespace WebApi2026.Context
         //Tabelas
 
         public IMongoCollection<Usuario> Usuarios =>
-    _database.GetCollection<Usuario>("Usuarios");
+            _database.GetCollection<Usuario>("Usuarios");
 
 
         public IMongoCollection<GastoMensal> GastosMensais =>
             _database.GetCollection<GastoMensal>("GastosMensais");
+
+        public IMongoCollection<Produto> Produto =>
+            _database.GetCollection<Produto>("Produtos");
 
     }
 }

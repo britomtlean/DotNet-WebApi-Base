@@ -18,6 +18,9 @@ namespace WebApi2026.Services
             _gastosMensais = context.GastosMensais; // assume que MongoContext tem propriedade GastoMensal
         }
 
+
+        
+
         public async Task<List<GastoMensal>> GetAllAsync()
         {
             return await _gastosMensais.Find(_ => true).ToListAsync();

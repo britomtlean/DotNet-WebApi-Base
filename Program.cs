@@ -15,21 +15,15 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 
-//////////////////////////// MONGO \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////////////////////////// MONGO \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // Configuração do appsettings.json
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings")
 );
 
-// Contexto do Mongo (substitui o AddDbContext<>())
+// Instancia do context (substitui o AddDbContext<>())
 builder.Services.AddSingleton<AppDbContext>();
-builder.Services.AddScoped<IGastoMensalService, GastoMensalService>();
-
-// Services
-builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-
-///////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////// JWT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -54,8 +48,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//INSTANCIA JWT
 builder.Services.AddSingleton<TokenService>();
-
 
 ///////////////////////////// CORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -63,16 +57,25 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MinhaPoliticaCors", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // Origem que você quer permitir
+        policy.WithOrigins("http://localhost:5028") // Origem que você quer permitir
               .AllowAnyHeader()                     // Permite qualquer cabeçalho
               .AllowAnyMethod();                    // Permite GET, POST, PUT, DELETE, etc.
     });
 });
-//////////////////////////////////////////////////////////////////////
+
+//////////////////////////// SERVICES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IGastoMensalService, GastoMensalService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProdutosService, ProdutosService>();
+builder.Services.AddScoped<Files>();
+
+///////////////////////////////////////////////////////////////////////
 
 var app = builder.Build();
 
-// 2. Usar CORS antes dos endpoints
+// Usar CORS antes dos endpoints
 app.UseCors("MinhaPoliticaCors");
 
 // Configure the HTTP request pipeline.

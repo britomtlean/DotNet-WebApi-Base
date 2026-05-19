@@ -20,6 +20,7 @@
           "net9.0"
         ],
         "sources": {
+          "/home/mtlean/nuget-packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,6 +45,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Google.Apis.Drive.v3": {
+              "target": "Package",
+              "version": "[1.74.0.4135, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.0, )"

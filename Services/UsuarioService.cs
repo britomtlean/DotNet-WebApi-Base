@@ -21,6 +21,8 @@ namespace WebApi2026.Services
             _usuarios = context.Usuarios;
         }
 
+        
+
         public async Task Create(Usuario usuario)
         {
             await _usuarios.InsertOneAsync(usuario);

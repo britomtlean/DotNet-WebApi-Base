@@ -3,21 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApi2026.Settings;
+using WebApi2026.Interfaces; //INTERFACE
+using WebApi2026.Types; //TYPE
+using WebApi2026.Entities; //Entitie
 
 namespace WebApi2026.Controllers
 {
     public class LoginController : ControllerBase
     {
+        private readonly IAuthService _service;
 
-        private readonly TokenService _tokenService;
-
-        public LoginController(TokenService tokenService)
+        public LoginController(IAuthService service)
         {
-            _tokenService = tokenService;
+            _service = service;
         }
 
 
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] Usuario register)
+        {
+            try
+            {
+            var message = await _service.Register(register);
+            return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return BadRequest( new
+                {
+                    mensagem = ex.Message
+                }
+                );
+            }
+        }
+
+        /*
         [HttpPost("login")]
         public IActionResult Login([FromBody] Dictionary<string, string> login)
         {
@@ -34,5 +57,22 @@ namespace WebApi2026.Controllers
 
             return BadRequest(new { Mensagem = "CPF e senha são obrigatórios" });
         }
+        */
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] Login login)
+        {
+            try
+            {
+                var token = await _service.Login(login);
+                return Ok(token);
+            }
+            catch(Exception er)
+            {
+                return Unauthorized(er.Message);
+            }
+
+        }
+
     }
 }

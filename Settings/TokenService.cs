@@ -15,7 +15,7 @@ namespace WebApi2026.Settings
 
         public TokenService(IConfiguration configuration)
         {
-            // Pega direto do appsettings.json
+            // Captura secret no .json
             _chaveSecreta = configuration["JwtSettings:Secret"]!;
         }
 
