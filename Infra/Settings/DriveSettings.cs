@@ -5,7 +5,7 @@ using Google.Apis.Upload;
 
 namespace WebApi2026.Settings
 {
-    public class UploadDrive
+    public class DriveSettings
     {
         /*
         public async Task<string> UploadArquivo(IFormFile arquivo)

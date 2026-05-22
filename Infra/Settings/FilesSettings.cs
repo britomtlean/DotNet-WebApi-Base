@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 namespace WebApi2026.Settings
 {
-    public class Files
+    public class FilesSettings
     {
         public async Task<string> Download(IFormFile arquivo)
         {
             // Criar pasta
-            var pasta = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+            var pasta = Path.Combine(Directory.GetCurrentDirectory(), "Public/Images");
+            Console.WriteLine("Pasta:");
+            Console.WriteLine(pasta);
 
             if (!Directory.Exists(pasta))
             {
@@ -18,10 +20,16 @@ namespace WebApi2026.Settings
             }
 
             // Nome único do arquivo
-            var nomeArquivo = Guid.NewGuid().ToString() + Path.GetExtension(arquivo.FileName);
+
+            // Padrão
+            //var nomeArquivo = Guid.NewGuid().ToString() + Path.GetExtension(arquivo.FileName);
+            //Console.WriteLine($"Nome: {nomeArquivo}");
+
+            // Teste
+            Console.WriteLine($"Nome: {arquivo.FileName}");
 
             // Diretório
-            var diretorioImagem = Path.Combine(pasta, nomeArquivo);
+            var diretorioImagem = Path.Combine(pasta, arquivo.FileName);
 
 
             // Salva a imagem
@@ -33,7 +41,7 @@ namespace WebApi2026.Settings
             // Drive
             //var driveId = await UploadArquivo(arquivo);
 
-            return diretorioImagem;
+            return arquivo.FileName;
         }
 
     }

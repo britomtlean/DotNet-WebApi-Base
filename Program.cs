@@ -1,10 +1,18 @@
+using System.Text;
 using WebApi2026.Context;
 using WebApi2026.Interfaces;
 using WebApi2026.Services;
 using WebApi2026.Settings;
+
+// TOKEN
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+
+// STATIC
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.StaticFiles;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +23,28 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 
-//////////////////////////// MONGO \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////// MONGO \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // Configuração do appsettings.json
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings")
 );
 
-// Instancia do context (substitui o AddDbContext<>())
+// INSTANCIA CONTEXT
 builder.Services.AddSingleton<AppDbContext>();
+
+
+///////////////////////////// CORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MinhaPoliticaCors", policy =>
+    {
+        policy.WithOrigins("http://localhost:5028") // Origem que você quer permitir
+              .AllowAnyHeader()                     // Permite qualquer cabeçalho
+              .AllowAnyMethod();                    // Permite GET, POST, PUT, DELETE, etc.
+    });
+});
 
 
 /////////////////////////////// JWT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -48,28 +69,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//INSTANCIA JWT
-builder.Services.AddSingleton<TokenService>();
 
-///////////////////////////// CORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("MinhaPoliticaCors", policy =>
-    {
-        policy.WithOrigins("http://localhost:5028") // Origem que você quer permitir
-              .AllowAnyHeader()                     // Permite qualquer cabeçalho
-              .AllowAnyMethod();                    // Permite GET, POST, PUT, DELETE, etc.
-    });
-});
-
-//////////////////////////// SERVICES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////////////////////////// INSTANCES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IGastoMensalService, GastoMensalService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProdutosService, ProdutosService>();
-builder.Services.AddScoped<Files>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<FilesSettings>();
+builder.Services.AddScoped<TokenSettings>();
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -88,6 +98,28 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+
+//////////////////////////// PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+var provider = new FileExtensionContentTypeProvider();
+
+provider.Mappings[".avif"] = "image/avif";
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "Public",
+            "Images"
+        )
+    ),
+    RequestPath = "/images",
+    ContentTypeProvider = provider
+});
+
+///////////////////////////////////////////////////////////////////////
 
 app.MapControllers();
 

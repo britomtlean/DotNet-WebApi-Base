@@ -9,15 +9,17 @@ using System.Text;
 
 namespace WebApi2026.Settings
 {
-    public class TokenService
+    public class TokenSettings
     {
         private readonly string _chaveSecreta;
 
-        public TokenService(IConfiguration configuration)
+        public TokenSettings(IConfiguration configuration)
         {
             // Captura secret no .json
             _chaveSecreta = configuration["JwtSettings:Secret"]!;
         }
+
+        
 
         public string GerarToken(string usuario)
         {

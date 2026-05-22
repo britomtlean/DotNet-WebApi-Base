@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using WebApi2026.Entities;
 
@@ -10,14 +9,6 @@ namespace WebApi2026.Context
 {
     public class AppDbContext
     {
-        //MYSQL
-
-        // public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
-        // public DbSet<> usuarios { get; set; } = default!;
-
-
-        //Mongo
         private readonly IMongoDatabase _database;
 
         public AppDbContext(IConfiguration config)
@@ -29,7 +20,7 @@ namespace WebApi2026.Context
             _database = client.GetDatabase(databaseName);
         }
 
-        //Tabelas
+        ////////////////////////////// TABELAS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         public IMongoCollection<Usuario> Usuarios =>
             _database.GetCollection<Usuario>("Usuarios");
@@ -40,6 +31,12 @@ namespace WebApi2026.Context
 
         public IMongoCollection<Produto> Produto =>
             _database.GetCollection<Produto>("Produtos");
+
+        public IMongoCollection<Cliente> Cliente =>
+            _database.GetCollection<Cliente>("Clientes");
+
+        public IMongoCollection<Pedido> Pedido =>
+            _database.GetCollection<Pedido>("Pedidos");
 
     }
 }

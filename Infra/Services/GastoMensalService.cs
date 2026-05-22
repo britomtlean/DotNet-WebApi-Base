@@ -15,11 +15,10 @@ namespace WebApi2026.Services
 
         public GastoMensalService(AppDbContext context)
         {
-            _gastosMensais = context.GastosMensais; // assume que MongoContext tem propriedade GastoMensal
+            _gastosMensais = context.GastosMensais;
         }
 
 
-        
 
         public async Task<List<GastoMensal>> GetAllAsync()
         {

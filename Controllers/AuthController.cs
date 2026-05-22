@@ -9,11 +9,12 @@ using WebApi2026.Entities; //Entitie
 
 namespace WebApi2026.Controllers
 {
-    public class LoginController : ControllerBase
+    [ApiController]
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _service;
 
-        public LoginController(IAuthService service)
+        public AuthController(IAuthService service)
         {
             _service = service;
         }
@@ -21,22 +22,19 @@ namespace WebApi2026.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Usuario register)
+        public async Task<IActionResult> Register([FromBody] Usuario newUser)
         {
             try
             {
-            var message = await _service.Register(register);
-            return Ok(message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
 
-                return BadRequest( new
-                {
-                    mensagem = ex.Message
-                }
-                );
+            var message = await _service.Register(newUser);
+            return Ok(message);
+
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.Message);
+                return BadRequest(new { mensagem = er.Message });
             }
         }
 

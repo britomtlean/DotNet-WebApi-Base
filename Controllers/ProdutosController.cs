@@ -8,7 +8,7 @@ using WebApi2026.Entities;
 
 namespace WebApi2026.Controllers
 {
-
+    [ApiController]
     [Route("api/[controller]")]
     public class ProdutosController : ControllerBase
     {
@@ -21,10 +21,10 @@ namespace WebApi2026.Controllers
         // Rotas
 
         [HttpPost]
-        public async Task<List<Produto>> Create([FromForm] Produto produto, IFormFile arquivo)
+        public async Task<IActionResult> Create([FromForm] Produto produto, IFormFile arquivo)
         {
             var produtos = await _service.AddProduct(produto, arquivo);
-            return produtos;
+            return Ok(produtos);
         }
     }
 }

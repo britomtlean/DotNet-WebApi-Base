@@ -9,9 +9,9 @@ namespace WebApi2026.Services
     public class ProdutosService : IProdutosService
     {
         private readonly IMongoCollection<Produto> _produtosCollection;
-        private readonly Files _files;
+        private readonly FilesSettings _files;
 
-        public ProdutosService(AppDbContext context, Files files)
+        public ProdutosService(AppDbContext context, FilesSettings files)
         {
             _produtosCollection = context.Produto;
             _files = files;

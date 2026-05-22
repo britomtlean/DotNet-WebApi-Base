@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using Microsoft.AspNetCore.Authorization; //Autenticação
 using WebApi2026.Entities;
 using WebApi2026.Interfaces;
 
@@ -56,14 +57,14 @@ namespace WebApi2026.Controllers
             return Ok(usuario);
         }
 
-
+        [Authorize]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             return Ok(await _service.Delete(id));
         }
 
-
+        [Authorize]
         [HttpPut("update/{id}")]
         public async Task<IActionResult> Update([FromBody] string nome, string id)
         {

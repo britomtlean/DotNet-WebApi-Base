@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+
 using WebApi2026.Entities;
 using WebApi2026.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi2026.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class GastoMensalController : ControllerBase
     {
@@ -21,6 +24,7 @@ namespace WebApi2026.Controllers
 
         // GET: api/GastoMensal
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<GastoMensal>>> GetAll()
         {
             var gastos = await _service.GetAllAsync();
@@ -32,8 +36,10 @@ namespace WebApi2026.Controllers
         public async Task<ActionResult<GastoMensal>> GetById(string id)
         {
             var gasto = await _service.GetByIdAsync(id);
+
             if (gasto == null)
                 return NotFound();
+
             return Ok(gasto);
         }
 
