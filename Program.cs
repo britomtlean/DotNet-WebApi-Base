@@ -12,6 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.StaticFiles;
 
+//SOCKET
+using WebApi2026.Hubs;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +45,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:5028") // Origem que você quer permitir
               .AllowAnyHeader()                     // Permite qualquer cabeçalho
-              .AllowAnyMethod();                    // Permite GET, POST, PUT, DELETE, etc.
+              .AllowAnyMethod()                     // Permite GET, POST, PUT, DELETE, etc.
+              .AllowCredentials();
     });
 });
 
@@ -70,6 +74,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 
+//////////////////////////// SIGNALR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+builder.Services.AddSignalR();
+
+
 //////////////////////////// INSTANCES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
@@ -93,6 +101,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// Rota do socket
+app.MapHub<ChatHub>("/chat");
 
 app.UseHttpsRedirection();
 

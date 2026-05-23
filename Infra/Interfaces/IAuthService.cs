@@ -9,7 +9,7 @@ namespace WebApi2026.Interfaces
 {
     public interface IAuthService
     {
-        Task<Object> Login(Login login);
+        Task<string> Login(Login login);
 
         Task<Object> Register(Usuario register);
     }

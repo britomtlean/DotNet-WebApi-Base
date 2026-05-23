@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApi2026.Interfaces;
 using WebApi2026.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi2026.Controllers
 {
@@ -20,6 +21,7 @@ namespace WebApi2026.Controllers
 
         // Rotas
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] Produto produto, IFormFile arquivo)
         {

@@ -26,7 +26,7 @@ namespace WebApi2026.Services
 
         /////////////////////// FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        public async Task<Object> Login(Login login)
+        public async Task<string> Login(Login login)
         {
             Console.WriteLine("Dados recebidos:");
             Console.WriteLine($"CPF: {login.Cpf}");
@@ -46,7 +46,7 @@ namespace WebApi2026.Services
             }
 
             var token = _tokenSettings.GerarToken(loginTrue.Cpf);
-            return new { token };
+            return token;
         }
 
 

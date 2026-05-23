@@ -44,11 +44,12 @@ namespace WebApi2026.Controllers
 
         }
 
-
-        [HttpGet("getunique/{id}")]
-        public async Task<IActionResult> GetUnique(string id)
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetUnique()
         {
-            var usuario = await _service.GetUnique(id);
+            var cpf = User.Identity?.Name;
+            var usuario = await _service.GetUnique(cpf);
 
             if (usuario == null)
                 return NotFound(new { mensagem = "Usuário não encontrado" });

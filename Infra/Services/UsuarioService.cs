@@ -21,7 +21,7 @@ namespace WebApi2026.Services
             _usuarios = context.Usuarios;
         }
 
-        
+
 
         public async Task Create(Usuario usuario)
         {
@@ -35,9 +35,9 @@ namespace WebApi2026.Services
         }
 
 
-        public async Task<Usuario?> GetUnique(string id)
+        public async Task<Usuario?> GetUnique(string cpf)
         {
-            return await _usuarios.Find(u => u.Id == id).FirstOrDefaultAsync();
+            return await _usuarios.Find(u => u.Cpf == cpf).FirstOrDefaultAsync();
         }
 
 

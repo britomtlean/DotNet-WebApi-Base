@@ -58,9 +58,9 @@ namespace WebApi2026.Services
                     Produtos = pedido.Produtos,
                     //ValorTotal = pedido.Produtos.Sum(p => p.Subtotal),
                     ValorTotal = pedido.ValorTotal,
-                    NomeCliente = "",
-                    ContatoCliente = "",
-                    EnderecoCliente = ""
+                    NomeCliente = pedido.NomeCliente,
+                    ContatoCliente = pedido.ContatoCliente,
+                    EnderecoCliente = pedido.EnderecoCliente
                 }
             );
 
