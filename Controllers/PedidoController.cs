@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using WebApi2026.Entities;
 using WebApi2026.Interfaces;
+
 namespace WebApi2026.Controllers
 {
     [ApiController]

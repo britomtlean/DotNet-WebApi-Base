@@ -50,19 +50,7 @@ namespace WebApi2026.Services
 
             */
 
-
-            await this._pedido.InsertOneAsync
-            (
-                new Pedido
-                {
-                    Produtos = pedido.Produtos,
-                    //ValorTotal = pedido.Produtos.Sum(p => p.Subtotal),
-                    ValorTotal = pedido.ValorTotal,
-                    NomeCliente = pedido.NomeCliente,
-                    ContatoCliente = pedido.ContatoCliente,
-                    EnderecoCliente = pedido.EnderecoCliente
-                }
-            );
+            await this._pedido.InsertOneAsync(pedido);
 
             return true;
         }

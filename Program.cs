@@ -43,7 +43,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MinhaPoliticaCors", policy =>
     {
-        policy.WithOrigins("http://localhost:5028") // Origem que você quer permitir
+        policy.WithOrigins("http://localhost:5028", "http://localhost:5173") // Origem que você quer permitir
               .AllowAnyHeader()                     // Permite qualquer cabeçalho
               .AllowAnyMethod()                     // Permite GET, POST, PUT, DELETE, etc.
               .AllowCredentials();
@@ -88,6 +88,7 @@ builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<FilesSettings>();
 builder.Services.AddScoped<TokenSettings>();
+builder.Services.AddSingleton<ChatService>();
 
 ///////////////////////////////////////////////////////////////////////
 
