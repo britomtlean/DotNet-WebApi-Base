@@ -40,7 +40,21 @@ namespace WebApi2026.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        // MENSAGEM GLOBAL
+        // ENTRAR NA SALA
+        public async Task EntrarSala(string sala)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, sala);
+
+            Console.WriteLine($"{Context.ConnectionId} entrou na sala: {sala}");
+        }
+
+        // SAIR DA SALA
+        public async Task SairSala(string sala)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
+        }
+
+        // RECEBER PEDIDO
         public async Task CreatePedido(Pedido pedido)
         // *O NOME DESTA FUNÇÃO DEVE SER CHAMADO NO connection.invoke() USADO NO FRONT*
         {
@@ -68,7 +82,16 @@ namespace WebApi2026.Hubs
                     Console.WriteLine("________________________________________________________");
                 }
 
-                await Clients.All.SendAsync("ReceiveMessage", pedido);
+                // ENVIAR PARA TODOS
+                //await Clients.All.SendAsync("ReceiveMessage", pedido);
+
+                // ENVIA SOMENTE PARA LOJA
+                await Clients.Group("loja")
+                    .SendAsync("ReceiveMessage", pedido);
+
+                await Clients.Group("cliente")
+                    .SendAsync("ReceiveMessage", "Pedido recebido, aguarde.");
+
             }
         }
     }
