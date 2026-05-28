@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "uPqYSd7LGBA=",
+  "dgSpecHash": "CaglJkMoOVA=",
   "success": true,
   "projectFilePath": "/home/mtlean/Documentos/Projects/DOTNET/WebApi2026/WebApi2026.csproj",
   "expectedPackageFiles": [
@@ -78,6 +78,7 @@
     "/home/mtlean/.nuget/packages/pomelo.entityframeworkcore.mysql/9.0.0/pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/sharpcompress/0.30.1/sharpcompress.0.30.1.nupkg.sha512",
     "/home/mtlean/.nuget/packages/snappier/1.0.0/snappier.1.0.0.nupkg.sha512",
+    "/home/mtlean/.nuget/packages/stripe.net/51.2.0/stripe.net.51.2.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.buffers/4.6.0/system.buffers.4.6.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.codedom/7.0.0/system.codedom.7.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.collections.immutable/7.0.0/system.collections.immutable.7.0.0.nupkg.sha512",
@@ -87,6 +88,8 @@
     "/home/mtlean/.nuget/packages/system.composition.hosting/7.0.0/system.composition.hosting.7.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.composition.runtime/7.0.0/system.composition.runtime.7.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.composition.typedparts/7.0.0/system.composition.typedparts.7.0.0.nupkg.sha512",
+    "/home/mtlean/.nuget/packages/system.configuration.configurationmanager/9.0.0/system.configuration.configurationmanager.9.0.0.nupkg.sha512",
+    "/home/mtlean/.nuget/packages/system.diagnostics.eventlog/9.0.0/system.diagnostics.eventlog.9.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.identitymodel.tokens.jwt/7.0.3/system.identitymodel.tokens.jwt.7.0.3.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.management/7.0.2/system.management.7.0.2.nupkg.sha512",
@@ -96,6 +99,7 @@
     "/home/mtlean/.nuget/packages/system.reflection.metadata/7.0.0/system.reflection.metadata.7.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.security.accesscontrol/5.0.0/system.security.accesscontrol.5.0.0.nupkg.sha512",
+    "/home/mtlean/.nuget/packages/system.security.cryptography.protecteddata/9.0.0/system.security.cryptography.protecteddata.9.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.security.principal.windows/5.0.0/system.security.principal.windows.5.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.text.encodings.web/8.0.0/system.text.encodings.web.8.0.0.nupkg.sha512",
     "/home/mtlean/.nuget/packages/system.text.json/9.0.0/system.text.json.9.0.0.nupkg.sha512",

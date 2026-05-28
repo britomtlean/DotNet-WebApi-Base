@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.StaticFiles;
 //SOCKET
 using WebApi2026.Hubs;
 
+//STRIP
+using Stripe;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -89,8 +92,12 @@ builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<FilesSettings>();
 builder.Services.AddScoped<TokenSettings>();
 builder.Services.AddSingleton<ChatService>();
+//builder.Services.AddScoped<ChatHub>();
 
 ///////////////////////////////////////////////////////////////////////
+
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 var app = builder.Build();
 

@@ -17,6 +17,7 @@ dotnet add package Pomelo.EntityFrameworkCore.MySql --version 9.0.0
 dotnet add package MongoDB.Driver --version 3.7.1 //Mongo
 dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0 //JWT
 dotnet add package Microsoft.AspNetCore.SignalR //Socket
+dotnet add package Stripe.net -- STRIP
 
 
 DRIVE
@@ -31,3 +32,9 @@ CODES
 DateTime.UtcNow; -- Data atual
 array.Sum(ar => ar.valor) -- reduce
 array.Select(ar => ar.elemento).ToList(); -- map
+
+-- STRIP --
+
+using Stripe;
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];

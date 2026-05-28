@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
 using WebApi2026.Entities;
-using WebApi2026.Interfaces;
 using System.Text.Json;
 
 namespace WebApi2026.Hubs
@@ -16,12 +15,10 @@ namespace WebApi2026.Hubs
     {
         private readonly ChatService _chatService;
 
-        private readonly IPedidoService _service;
-
-        public ChatHub(ChatService chatService, IPedidoService service)
+        public ChatHub(ChatService chatService)
         {
             _chatService = chatService;
-            _service = service;
+
         }
 
         // Usuário conectou
@@ -54,19 +51,28 @@ namespace WebApi2026.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
         }
 
+
+
         // RECEBER PEDIDO
         public async Task CreatePedido(Pedido pedido)
         // *O NOME DESTA FUNÇÃO DEVE SER CHAMADO NO connection.invoke() USADO NO FRONT*
         {
-            Console.WriteLine($"📩 Mensagem global recebida: {JsonSerializer.Serialize(pedido)}");
+            Console.WriteLine("____________________ Pedido _________________________");
+            Console.WriteLine(
+                JsonSerializer.Serialize(
+                    pedido,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }
+                )
+            );
+            Console.WriteLine("________________________________________________________");
 
-            var resultado = await _service.AdicionarPedido(pedido);
-
-            if(resultado)
-            {
-                _chatService.Messages.Add(pedido);
-
+            /*
+                _chatService.Messages.Add();
                 // LISTAR ARRAY DE PEDIDOS
+
                 foreach (var item in _chatService.Messages)
                 {
                     Console.WriteLine("____________________ Pedido _________________________");
@@ -81,18 +87,20 @@ namespace WebApi2026.Hubs
                     );
                     Console.WriteLine("________________________________________________________");
                 }
+            */
 
-                // ENVIAR PARA TODOS
-                //await Clients.All.SendAsync("ReceiveMessage", pedido);
+            // ENVIAR PARA TODOS
+            //await Clients.All.SendAsync("ReceiveMessage", pedido);
 
-                // ENVIA SOMENTE PARA LOJA
-                await Clients.Group("loja")
-                    .SendAsync("ReceiveMessage", pedido);
+            // ENVIA SOMENTE PARA LOJA
+            await Clients.Group("loja")
+                .SendAsync("ReceiveMessage", pedido);
 
-                await Clients.Group("cliente")
-                    .SendAsync("ReceiveMessage", "Pedido recebido, aguarde.");
+            await Clients.Group($"{pedido.ContatoCliente}")
+                .SendAsync("ReceiveMessage", "Pedido enviado, aguarde a confirmação.");
 
-            }
+            //}
         }
+
     }
 }
