@@ -21,10 +21,10 @@ namespace WebApi2026.Controllers
                 {
                     "card"
                 },
-
+                //CARRINHO
                 LineItems = new List<SessionLineItemOptions>
                 {
-                    //ITEMS
+                    //PRODUTO
                     new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions
@@ -32,9 +32,35 @@ namespace WebApi2026.Controllers
                             Currency = "brl",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = "Carrinho"
+                                Name = "Item 1"
                             },
-                            UnitAmount = 5000
+                            UnitAmount = 100
+                        },
+                        Quantity = 1
+                    },
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "brl",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "item 2"
+                            },
+                            UnitAmount = 200
+                        },
+                        Quantity = 1
+                    },
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "brl",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "item 3"
+                            },
+                            UnitAmount = 300
                         },
                         Quantity = 1
                     }
