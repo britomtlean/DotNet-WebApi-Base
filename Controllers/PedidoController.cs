@@ -24,10 +24,10 @@ namespace WebApi2026.Controllers
             _hub = hub;
         }
 
-        // ROTAS
-
+        // LOJA CONFIRMA O PEDIDO PAGO NA ENTREGA
+        /* LOJA SALVA O PEDIDO NO BANCO
         [HttpPost]
-        public async Task<IActionResult> cofirmOrder([FromBody] Pedido pedido)
+        public async Task<IActionResult> SalvarPedido([FromBody] Pedido pedido)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace WebApi2026.Controllers
                     .Group($"{pedido.ContatoCliente}")
                     .SendAsync(
                         "ReceiveMessage",
-                        $"Pedido: {pedido.Id} confirmado!"
+                        $"Pedido confirmado!"
                     );
 
                 return Ok("Pedido confirmado");
@@ -52,6 +52,69 @@ namespace WebApi2026.Controllers
                 {
                     return BadRequest($"{er.Message}");
                 }
+            }
+        }
+        */
+
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> RetornarPedidos()
+        {
+            try
+            {
+                var pedidos = await _service.RetornarPedido();
+                return Ok(pedidos);
+            }
+            catch(Exception er)
+            {
+                return BadRequest(er.Message);
+            }
+        }
+
+        [HttpPut("confirmar")]
+        public async Task<IActionResult> ConfirmarPedido(Pedido pedido)
+        {
+            try
+            {
+                var service = await this._service.ConfirmarPedido(pedido);
+
+                await _hub.Clients
+                    .Group($"{pedido.ContatoCliente}")
+                    .SendAsync(
+                        "ReceiveMessage",
+                        $"Pedido confirmado!"
+                    );
+
+                return Ok("Pedido confirmado com sucesso!");
+            }
+            catch(Exception er)
+            {
+                return BadRequest(er.Message);
+            }
+        }
+
+        [HttpPut("cancelar")]
+        public async Task<IActionResult> CancelarPedido(Pedido pedido)
+        {
+            try
+            {
+                var service = await this._service.CancelarPedido(pedido);
+
+                await _hub.Clients
+                    .Group($"{pedido.ContatoCliente}")
+                    .SendAsync(
+                        "ReceiveMessage",
+                        $"Pedido cancelado!"
+                    );
+
+                return Ok("Pedido cancelado com sucesso!"); ;
+            }
+            catch (Exception er)
+            {
+                return BadRequest(er.Message);
             }
         }
 

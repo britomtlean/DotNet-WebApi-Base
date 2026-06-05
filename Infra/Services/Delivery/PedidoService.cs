@@ -55,5 +55,25 @@ namespace WebApi2026.Services
             return true;
         }
 
+        public async Task<Boolean> ConfirmarPedido(Pedido pedido)
+        {
+            await _pedido.UpdateOneAsync(p => p.Id == pedido.Id, Builders<Pedido>.Update.Set(p => p.Status, true));
+
+            return true;
+        }
+
+        public async Task<Boolean> CancelarPedido(Pedido pedido)
+        {
+            var status = await  _pedido.UpdateOneAsync(p => p.Id == pedido.Id, Builders<Pedido>.Update.Set(p => p.Status, false));
+            return false;
+        }
+
+        public async Task<List<Pedido>> RetornarPedido()
+        {
+            var pedidos = await _pedido.Find(_ => true).ToListAsync();
+
+            return pedidos;
+        }
+
     }
 }

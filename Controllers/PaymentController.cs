@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 //
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout; //STRIP
+using WebApi2026.Entities;
+using System.Text.Json;
 
 namespace WebApi2026.Controllers
 {
@@ -12,9 +14,37 @@ namespace WebApi2026.Controllers
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
+
         [HttpPost]
         public IActionResult CreateCheckout()
         {
+
+            var pedido = new Pedido
+            {
+                Produtos = new List<ProdutoPedido>
+                {
+                    new ProdutoPedido
+                    {
+                        ProdutoId = "6a10d5b7ae6f124854579c0e",
+                        Nome = "Top Jet",
+                        Quantidade = 1,
+                        ValorUnitario = 10,
+                        Subtotal = 10
+                    }
+                },
+
+                ValorTotal = 10,
+
+                NomeCliente = "Teste Cliente 1",
+
+                ContatoCliente = "123",
+
+                EnderecoCliente = "Rua X"
+            };
+
+            var pedidoJson = JsonSerializer.Serialize(pedido);
+
+
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -24,50 +54,30 @@ namespace WebApi2026.Controllers
                 //CARRINHO
                 LineItems = new List<SessionLineItemOptions>
                 {
-                    //PRODUTO
                     new SessionLineItemOptions
                     {
+                        Quantity = 1,
+
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "brl",
+
+                            UnitAmount = 1000,
+
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = "Item 1"
-                            },
-                            UnitAmount = 100
-                        },
-                        Quantity = 1
-                    },
-                    new SessionLineItemOptions
-                    {
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = "brl",
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = "item 2"
-                            },
-                            UnitAmount = 200
-                        },
-                        Quantity = 1
-                    },
-                    new SessionLineItemOptions
-                    {
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = "brl",
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = "item 3"
-                            },
-                            UnitAmount = 300
-                        },
-                        Quantity = 1
+                                Name = "Top Jet"
+                            }
+                        }
                     }
                 },
                 Mode = "payment",
                 SuccessUrl = "http://localhost:5173/sucesso",
-                CancelUrl = "http://localhost:5173/cancelado"
+                CancelUrl = "http://localhost:5173/cancelado",
+                Metadata = new Dictionary<string, string>
+                {
+                    { "pedido", pedidoJson }
+                }
             };
 
             var service = new SessionService();

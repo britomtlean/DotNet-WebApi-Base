@@ -8,6 +8,8 @@ namespace WebApi2026.Interfaces
 {
     public interface IProdutosService
     {
-        Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo);
+        public Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo);
+
+        public Task<List<Produto>> ReturnProducts();
     }
 }

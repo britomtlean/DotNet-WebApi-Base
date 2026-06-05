@@ -19,6 +19,12 @@ namespace WebApi2026.Services
 
         public async Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo)
         {
+
+            if(arquivo == null || produto == null)
+            {
+                throw new Exception("Dados inválidos");
+            }
+
             var diretorioImagem = await _files.Download(arquivo);
 
             await _produtosCollection.InsertOneAsync(
@@ -27,14 +33,24 @@ namespace WebApi2026.Services
                     Nome = produto.Nome,
                     Descricao = produto.Descricao,
                     Valor = produto.Valor,
+                    Categoria = produto.Categoria,
                     Estoque = produto.Estoque,
                     Imagem = diretorioImagem
                 }
             );
 
-            return await _produtosCollection
+            var produtos = await _produtosCollection
                 .Find(_ => true)
                 .ToListAsync();
+
+                return produtos;
+        }
+
+        public  Task<List<Produto>> ReturnProducts()
+        {
+            var produtos = this._produtosCollection.Find(_ => true).ToListAsync();
+
+            return produtos;
         }
     }
 }

@@ -23,10 +23,31 @@ namespace WebApi2026.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] Produto produto, IFormFile arquivo)
+        public async Task<IActionResult> Take([FromForm] Produto produto, IFormFile arquivo)
         {
-            var produtos = await _service.AddProduct(produto, arquivo);
-            return Ok(produtos);
+            try
+            {
+                var produtos = await _service.AddProduct(produto, arquivo);
+                return Ok(produtos);
+            }
+            catch(Exception er)
+            {
+                return BadRequest(er.Message);
+            }
+        }
+
+        //[Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Return()
+        {
+            try{
+                var produtos = await _service.ReturnProducts();
+                return Ok(produtos);
+            }
+            catch(Exception er)
+            {
+                return BadRequest(er.Message);
+            }
         }
     }
 }

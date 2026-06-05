@@ -21,6 +21,9 @@ namespace WebApi2026.Entities
         [BsonElement("descricao")]
         public string Descricao { get; set; } = null!;
 
+        [BsonElement("categoria")]
+        public string Categoria { get; set; } = null!;
+
         [BsonElement("valor")]
         [Required]
         public decimal Valor { get; set; } = 0;
