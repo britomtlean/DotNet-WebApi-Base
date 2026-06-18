@@ -19,18 +19,19 @@ namespace WebApi2026.Entities
         public string Nome { get; set; } = null!;
 
         [BsonElement("descricao")]
-        public string Descricao { get; set; } = null!;
+        public string? Descricao { get; set; }
 
         [BsonElement("categoria")]
         public string Categoria { get; set; } = null!;
 
         [BsonElement("valor")]
-        [Required]
         public decimal Valor { get; set; } = 0;
 
         [BsonElement("estoque")]
-        [BsonDefaultValue(0)]
         public int Estoque { get; set; } = 0;
+
+        [BsonElement("disponibilidade")]
+        public bool Disponibilidade { get; set; } = true;
 
         [BsonElement("imagem")]
         public string? Imagem { get; set; }

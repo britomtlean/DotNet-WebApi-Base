@@ -21,7 +21,7 @@ namespace WebApi2026.Controllers
 
         // Rotas
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> Take([FromForm] Produto produto, IFormFile arquivo)
         {

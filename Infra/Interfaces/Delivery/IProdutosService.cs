@@ -11,5 +11,9 @@ namespace WebApi2026.Interfaces
         public Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo);
 
         public Task<List<Produto>> ReturnProducts();
+
+        //public Task<bool> Up(Produto produto);
+
+       // public Task<bool> Down(Produto produto);
     }
 }
