@@ -1,1 +1,42 @@
 dotnet ef migrations add InitialCreate -- criar migration
+
+MONGO
+.InsertOneAsync -- Create
+.Find(_ => true).ToListAsync(); -- GetAll
+.Find(u => u.Id == id).FirstOrDefaultAsync(); -- GetUnique
+.DeleteOneAsync(u => u.Id == id); -- Delete
+
+array.Contains('coluna desejada') -- busca por campo definido
+
+
+PACKEGES
+dotnet add package Microsoft.AspNetCore.OpenApi --version 9.0.4
+dotnet add package Microsoft.EntityFrameworkCore --version 9.0.0
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 9.0.0
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 9.0.0
+dotnet add package MongoDB.Driver --version 3.7.1 //Mongo
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0 //JWT
+dotnet add package Microsoft.AspNetCore.SignalR //Socket
+dotnet add package Stripe.net -- STRIP
+
+
+DRIVE
+dotnet add package Google.Apis.Drive.v3
+
+ARQUIVOS ESTÁTICOS
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.StaticFiles;
+
+CODES
+DateTime.UtcNow; -- Data atual
+array.Sum(ar => ar.valor) -- reduce
+array.Select(ar => ar.elemento).ToList(); -- map
+
+-- CONVERTER OBJETO EM JSON --
+JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
+
+-- STRIP --
+
+using Stripe;
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
