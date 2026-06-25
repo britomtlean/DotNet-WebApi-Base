@@ -32,6 +32,9 @@ DateTime.UtcNow; -- Data atual
 array.Sum(ar => ar.valor) -- reduce
 array.Select(ar => ar.elemento).ToList(); -- map
 
+-- CONVERTER OBJETO EM JSON --
+JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
+
 -- STRIP --
 
 using Stripe;

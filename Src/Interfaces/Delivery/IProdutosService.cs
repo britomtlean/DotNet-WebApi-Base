@@ -12,6 +12,9 @@ namespace WebApi2026.Interfaces
 
         public Task<List<Produto>> ReturnProducts();
 
+        public Task<Object> UpdateProduct(string id, Produto update);
+
+
         //public Task<bool> Up(Produto produto);
 
        // public Task<bool> Down(Produto produto);

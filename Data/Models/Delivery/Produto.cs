@@ -22,7 +22,7 @@ namespace WebApi2026.Entities
         public string? Descricao { get; set; }
 
         [BsonElement("categoria")]
-        public string Categoria { get; set; } = null!;
+        public string? Categoria { get; set; }
 
         [BsonElement("valor")]
         public decimal Valor { get; set; } = 0;

@@ -38,7 +38,7 @@ namespace WebApi2026.Controllers
 
         //[Authorize]
         [HttpGet]
-        public async Task<IActionResult> Return()
+        public async Task<IActionResult> Send()
         {
             try{
                 var produtos = await _service.ReturnProducts();
@@ -48,6 +48,14 @@ namespace WebApi2026.Controllers
             {
                 return BadRequest(er.Message);
             }
+        }
+
+
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] Produto data)
+        {
+            var message = await _service.UpdateProduct(id, data);
+            return Ok(message);
         }
     }
 }

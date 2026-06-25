@@ -7,20 +7,22 @@ using WebApi2026.Interfaces;
 namespace WebApi2026.Hubs
 {
 
+    /*
     public class ChatService
     {
         public List<Pedido> Messages { get; set; } = new();
     }
+    */
 
 
     public class ChatHub : Hub
     {
-        private readonly ChatService _chatService;
+       // private readonly ChatService _chatService;
         private readonly IPedidoService _service;
 
-        public ChatHub(ChatService chatService, IPedidoService service)
+        public ChatHub(IPedidoService service)
         {
-            _chatService = chatService;
+           // _chatService = chatService;
             _service = service;
         }
 
@@ -62,14 +64,9 @@ namespace WebApi2026.Hubs
         {
 
             Console.WriteLine($"____________________ Pedido Recebido ás : {DateTime.UtcNow} _________________________");
+
             Console.WriteLine(
-                JsonSerializer.Serialize(
-                    pedido,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                )
+                JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
             );
             Console.WriteLine("________________________________________________________");
 
@@ -97,7 +94,6 @@ namespace WebApi2026.Hubs
                 .SendAsync("ReceiveMessage", $"{er.Message}");
             }
 
-            //}
         }
 
     }

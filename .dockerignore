@@ -1,0 +1,13 @@
+bin/
+obj/
+
+.git/
+.gitignore
+
+.vscode/
+
+Rascunho/
+Codes.txt
+
+Dockerfile
+README.md

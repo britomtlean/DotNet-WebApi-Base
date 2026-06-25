@@ -52,5 +52,34 @@ namespace WebApi2026.Services
 
             return produtos;
         }
+
+        public async Task<Object> UpdateProduct(string id, Produto update)
+        {
+            var produto = await _produtosCollection.Find(p => p.Id == id)
+                                       .FirstOrDefaultAsync();
+
+            if (produto == null)
+                return "Produto não encontrado";
+
+            await this._produtosCollection.UpdateOneAsync(
+                p => p.Id == id,
+                Builders<Produto>.Update.Set(p => p.Disponibilidade, update.Disponibilidade )
+            );
+
+            await this._produtosCollection.UpdateOneAsync(
+                p => p.Id == id,
+                Builders<Produto>.Update.Set(p => p.Nome, update.Nome)
+            );
+
+            await this._produtosCollection.UpdateOneAsync(
+                p => p.Id == id,
+                Builders<Produto>.Update.Set(p => p.Valor, update.Valor)
+            );
+
+            produto = await _produtosCollection.Find(p => p.Id == id)
+                                       .FirstOrDefaultAsync();
+
+            return new {produto};
+        }
     }
 }

@@ -19,6 +19,10 @@
     <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="Stripe.net" Version="51.2.0" />
+
+    <Content Include="Public\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
   </ItemGroup>
 
 </Project>
