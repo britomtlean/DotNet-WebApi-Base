@@ -10,7 +10,7 @@ using System.Text.Json;
 [Route("api/stripe/webhook")]
 public class StripeWebhookController : ControllerBase
 {
-    private readonly string endpointSecret = "whsec_25797bf5db139722246e0a65079698956e7d26529f9980b36ae2ee9df934b0f8";
+    private readonly string endpointSecret = "whsec_3AK6E4iZs9TOb0WpVCixISS1Zcf6Z4jQ";
     private readonly IPedidoService _service;
     private readonly IHubContext<ChatHub> _hub;
 
