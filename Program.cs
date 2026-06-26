@@ -92,6 +92,7 @@ builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<FilesSettings>();
 builder.Services.AddScoped<TokenSettings>();
+builder.Services.AddScoped<CloudinarySettings>();
 //builder.Services.AddSingleton<ChatHub>();
 //builder.Services.AddScoped<ChatHub>();
 
