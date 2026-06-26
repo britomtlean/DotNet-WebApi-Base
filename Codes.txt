@@ -14,10 +14,12 @@ dotnet add package Microsoft.AspNetCore.OpenApi --version 9.0.4
 dotnet add package Microsoft.EntityFrameworkCore --version 9.0.0
 dotnet add package Microsoft.EntityFrameworkCore.Design --version 9.0.0
 dotnet add package Pomelo.EntityFrameworkCore.MySql --version 9.0.0
+
 dotnet add package MongoDB.Driver --version 3.7.1 //Mongo
 dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0 //JWT
 dotnet add package Microsoft.AspNetCore.SignalR //Socket
 dotnet add package Stripe.net -- STRIP
+dotnet add package CloudinaryDotNet -- CLOUDNARY
 
 
 DRIVE
@@ -40,3 +42,8 @@ JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true}
 using Stripe;
 
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+
+-- CLOUDNARY --
+
+https://cloudinary.com/documentation/dotnet_quickstart

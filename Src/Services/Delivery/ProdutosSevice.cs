@@ -11,21 +11,29 @@ namespace WebApi2026.Services
         private readonly IMongoCollection<Produto> _produtosCollection;
         private readonly FilesSettings _files;
 
-        public ProdutosService(AppDbContext context, FilesSettings files)
+        private readonly CloudinarySettings _cloudinary;
+
+        public ProdutosService(AppDbContext context, FilesSettings files, CloudinarySettings cloudinary)
         {
             _produtosCollection = context.Produto;
             _files = files;
+            _cloudinary = cloudinary;
         }
 
         public async Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo)
         {
 
+            // UPLOAD DE ARQUIVOS NO SERVIDOR
+            /*
             if(arquivo == null || produto == null)
             {
                 throw new Exception("Dados inválidos");
             }
 
             var diretorioImagem = await _files.Download(arquivo);
+            */
+
+            var diretorioImagem = await _cloudinary.UploadImageAsync(arquivo);
 
             await _produtosCollection.InsertOneAsync(
                 new Produto
