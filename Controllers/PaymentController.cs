@@ -71,7 +71,8 @@ namespace WebApi2026.Controllers
                         }
                     }
                 },
-                Mode = "http://localhost:5174/sucesso",
+                Mode = "payment",
+                SuccessUrl = "http://localhost:5174/sucesso",
                 CancelUrl = "http://localhost:5174/cancelado",
                 Metadata = new Dictionary<string, string>
                 {
