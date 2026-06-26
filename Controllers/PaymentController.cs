@@ -71,9 +71,8 @@ namespace WebApi2026.Controllers
                         }
                     }
                 },
-                Mode = "payment",
-                SuccessUrl = "https://dotnet-webapi-base-production.up.railway.app/sucesso",
-                CancelUrl = "https://dotnet-webapi-base-production.up.railway.app/cancelado",
+                Mode = "http://localhost:5174/sucesso",
+                CancelUrl = "http://localhost:5174/cancelado",
                 Metadata = new Dictionary<string, string>
                 {
                     { "pedido", pedidoJson }
