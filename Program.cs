@@ -101,6 +101,8 @@ builder.Services.AddHttpClient("apiPDF", client =>
 //builder.Services.AddSingleton<ChatHub>();
 //builder.Services.AddScoped<ChatHub>();
 
+builder.Services.AddSingleton<SalaManager>();
+
 ///////////////////////////////////////////////////////////////////////
 
 
