@@ -89,5 +89,12 @@ namespace WebApi2026.Services
 
             return new {produto};
         }
+
+        public async Task<bool> DeleteProduct(string id)
+        {
+            await _produtosCollection.DeleteOneAsync(p => p.Id == id);
+
+            return true;
+        }
     }
 }

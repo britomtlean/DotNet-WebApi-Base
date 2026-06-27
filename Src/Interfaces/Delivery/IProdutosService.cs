@@ -14,6 +14,8 @@ namespace WebApi2026.Interfaces
 
         public Task<Object> UpdateProduct(string id, Produto update);
 
+        public Task<bool> DeleteProduct(string id);
+
 
         //public Task<bool> Up(Produto produto);
 

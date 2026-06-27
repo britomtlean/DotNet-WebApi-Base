@@ -57,5 +57,13 @@ namespace WebApi2026.Controllers
             var message = await _service.UpdateProduct(id, data);
             return Ok(message);
         }
+
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] string id)
+        {
+            var message = await _service.DeleteProduct(id);
+            return Ok(message);
+        }
     }
 }
