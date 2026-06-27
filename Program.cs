@@ -93,6 +93,11 @@ builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<FilesSettings>();
 builder.Services.AddScoped<TokenSettings>();
 builder.Services.AddScoped<CloudinarySettings>();
+builder.Services.AddHttpClient("apiPDF", client =>
+{
+    client.BaseAddress = new Uri("https://servidor-sistema-vendas.up.railway.app/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
 //builder.Services.AddSingleton<ChatHub>();
 //builder.Services.AddScoped<ChatHub>();
 
