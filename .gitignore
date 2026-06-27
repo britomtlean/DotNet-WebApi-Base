@@ -6,6 +6,7 @@ obj/
 .vscode/
 
 appsettings.Development.json
+.json*
 
 .env
 .env.*
