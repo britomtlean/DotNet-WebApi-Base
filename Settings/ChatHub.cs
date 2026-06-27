@@ -7,17 +7,22 @@ using System.Net.Http;
 
 namespace WebApi2026.Hubs
 {
+    public class SalaManager
+    {
+        public List<string> Salas { get; } = new();
+    }
     public class ChatHub : Hub
     {
         private readonly IPedidoService _service;
         private readonly HttpClient _httpClient;
 
-        private readonly List<string> _sala = new();
+        private readonly SalaManager _sala;
 
-        public ChatHub(IPedidoService service, IHttpClientFactory httpClientFactory)
+        public ChatHub(IPedidoService service, IHttpClientFactory httpClientFactory, SalaManager salaManager)
         {
             _service = service;
             _httpClient = httpClientFactory.CreateClient("apiPDF");
+            _sala = salaManager;
         }
 
         // Usuário conectou
@@ -43,14 +48,17 @@ namespace WebApi2026.Hubs
 
             Console.WriteLine($"{Context.ConnectionId} entrou na sala: {sala}");
 
-                _sala.Add(sala);
+            if (!_sala.Salas.Contains(sala))
+            {
+                _sala.Salas.Add(sala);
+            }
         }
 
         // SAIR DA SALA
         public async Task SairSala(string sala)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
-            _sala.Remove(sala);
+            _sala.Salas.Remove(sala);
         }
 
 
@@ -85,7 +93,7 @@ namespace WebApi2026.Hubs
                         return;
                     }
 
-                    foreach(var sala in _sala)
+                    foreach(var sala in _sala.Salas)
                     {
                         if (sala == "loja")
                         {
