@@ -12,7 +12,7 @@ namespace WebApi2026.Hubs
         private readonly IPedidoService _service;
         private readonly HttpClient _httpClient;
 
-        private readonly List<string> _sala = null!;
+        private readonly List<string> _sala = new();
 
         public ChatHub(IPedidoService service, IHttpClientFactory httpClientFactory)
         {
