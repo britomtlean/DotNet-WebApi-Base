@@ -3,16 +3,20 @@ using WebApi2026.Entities;
 using System.Text.Json;
 using WebApi2026.Services;
 using WebApi2026.Interfaces;
+using System.Net.Http;
 
 namespace WebApi2026.Hubs
 {
     public class ChatHub : Hub
     {
         private readonly IPedidoService _service;
+        private readonly HttpClient _httpClient;
 
-        public ChatHub(IPedidoService service)
+
+        public ChatHub(IPedidoService service, IHttpClientFactory httpClientFactory)
         {
             _service = service;
+            _httpClient = httpClientFactory.CreateClient("apiPDF");
         }
 
         // Usuário conectou
@@ -52,7 +56,7 @@ namespace WebApi2026.Hubs
         // *O NOME DESTA FUNÇÃO DEVE SER CHAMADO NO connection.invoke() USADO NO FRONT*
         {
 
-            Console.WriteLine($"____________________ Pedido Recebido ás : {DateTime.UtcNow} _________________________");
+            Console.WriteLine($"____________________ Pedido Recebido _________________________");
 
             Console.WriteLine(
                 JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
@@ -69,12 +73,23 @@ namespace WebApi2026.Hubs
 
                 if(confirm == true)
                 {
+                    var res = await _httpClient.PostAsJsonAsync("api/produtos", pedido);
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine(await res.Content.ReadAsStringAsync());
+                        return;
+                    }
+                    
                     // ENVIA SOMENTE PARA LOJA
                     await Clients.Group("loja")
                         .SendAsync("ReceiveMessage", pedido);
 
+                    //ENVIA PARA CLIENTE
                     await Clients.Group($"{pedido.ContatoCliente}")
                         .SendAsync("ReceiveMessage", "Aguardando confirmação...");
+
+
                 }
             }
             catch(Exception er)
