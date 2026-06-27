@@ -73,14 +73,14 @@ namespace WebApi2026.Hubs
 
                 if(confirm == true)
                 {
-                    var res = await _httpClient.PostAsJsonAsync("api/produtos", pedido);
+                    var res = await _httpClient.PostAsJsonAsync("gerarPDF", pedido);
 
                     if (!res.IsSuccessStatusCode)
                     {
                         Console.WriteLine(await res.Content.ReadAsStringAsync());
                         return;
                     }
-                    
+
                     // ENVIA SOMENTE PARA LOJA
                     await Clients.Group("loja")
                         .SendAsync("ReceiveMessage", pedido);
