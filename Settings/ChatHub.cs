@@ -12,6 +12,7 @@ namespace WebApi2026.Hubs
         private readonly IPedidoService _service;
         private readonly HttpClient _httpClient;
 
+        private readonly List<string> _sala = null!;
 
         public ChatHub(IPedidoService service, IHttpClientFactory httpClientFactory)
         {
@@ -41,12 +42,15 @@ namespace WebApi2026.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, sala);
 
             Console.WriteLine($"{Context.ConnectionId} entrou na sala: {sala}");
+
+                _sala.Add(sala);
         }
 
         // SAIR DA SALA
         public async Task SairSala(string sala)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
+            _sala.Remove(sala);
         }
 
 
@@ -81,14 +85,28 @@ namespace WebApi2026.Hubs
                         return;
                     }
 
-                    // ENVIA SOMENTE PARA LOJA
-                    await Clients.Group("loja")
-                        .SendAsync("ReceiveMessage", pedido);
+                    foreach(var sala in _sala)
+                    {
+                        if (sala == "loja")
+                        {
+                            // ENVIA SOMENTE PARA LOJA
+                            await Clients.Group("loja")
+                                .SendAsync("ReceiveMessage", pedido);
 
-                    //ENVIA PARA CLIENTE
+                            //ENVIA PARA CLIENTE
+                            await Clients.Group($"{pedido.ContatoCliente}")
+                                .SendAsync("ReceiveMessage", "Aguardando confirmação...");
+
+                            return;
+
+                        }
+
+                    }
+
+                    Console.Write("Loja offline");
+
                     await Clients.Group($"{pedido.ContatoCliente}")
-                        .SendAsync("ReceiveMessage", "Aguardando confirmação...");
-
+                            .SendAsync("ReceiveMessage", "Loja offline");
 
                 }
             }
