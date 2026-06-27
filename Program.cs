@@ -46,7 +46,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MinhaPoliticaCors", policy =>
     {
-        policy.WithOrigins("http://localhost:5028", "http://localhost:5173", "http://localhost:5174") // Origem que você quer permitir
+        policy.WithOrigins("http://localhost:5028", "http://localhost:5173", "http://localhost:5174", "https://delivery-sytem.netlify.app") // Origem que você quer permitir
               .AllowAnyHeader()                     // Permite qualquer cabeçalho
               .AllowAnyMethod()                     // Permite GET, POST, PUT, DELETE, etc.
               .AllowCredentials();

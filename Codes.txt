@@ -17,25 +17,31 @@ dotnet add package Pomelo.EntityFrameworkCore.MySql --version 9.0.0
 
 dotnet add package MongoDB.Driver --version 3.7.1 //Mongo
 dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0 //JWT
-dotnet add package Microsoft.AspNetCore.SignalR //Socket
+dotnet add package Microsoft.AspNetCore.SignalR -- SIGNALR
 dotnet add package Stripe.net -- STRIP
 dotnet add package CloudinaryDotNet -- CLOUDNARY
-
-
-DRIVE
-dotnet add package Google.Apis.Drive.v3
+dotnet add package Google.Apis.Drive.v3 -- DRIVE
 
 ARQUIVOS ESTÁTICOS
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.StaticFiles;
 
+STRING
+using System.Text;
+
+CLASSES
+
+-- IConfiguration
+configuration["JwtSettings:Secret"] -- PEGAR DADOS EM .JSON
+
+-- JsonSerializer
+JsonSerializer.Serialize(objeto) -- TRANSFORMA OBJETO EM STRING JSON
+
 CODES
+
 DateTime.UtcNow; -- Data atual
 array.Sum(ar => ar.valor) -- reduce
 array.Select(ar => ar.elemento).ToList(); -- map
-
--- CONVERTER OBJETO EM JSON --
-JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
 
 -- STRIP --
 
