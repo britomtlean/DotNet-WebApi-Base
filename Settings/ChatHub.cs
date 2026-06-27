@@ -6,23 +6,12 @@ using WebApi2026.Interfaces;
 
 namespace WebApi2026.Hubs
 {
-
-    /*
-    public class ChatService
-    {
-        public List<Pedido> Messages { get; set; } = new();
-    }
-    */
-
-
     public class ChatHub : Hub
     {
-       // private readonly ChatService _chatService;
         private readonly IPedidoService _service;
 
         public ChatHub(IPedidoService service)
         {
-           // _chatService = chatService;
             _service = service;
         }
 
