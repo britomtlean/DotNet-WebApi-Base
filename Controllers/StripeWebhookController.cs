@@ -34,7 +34,7 @@ public class StripeWebhookController : ControllerBase
             );
 
             // Pagamento concluído
-            if (stripeEvent.Type == "checkout.session.completed")
+            if (stripeEvent.Type == "payment_intent.succeeded")
             {
                 var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
