@@ -1,5 +1,7 @@
 using System.Text;
 using WebApi2026.Context;
+using WebApi2026.Data.Settings;
+
 using WebApi2026.Interfaces;
 using WebApi2026.Services;
 using WebApi2026.Settings;
@@ -12,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.StaticFiles;
 
-//SOCKET
+//SIGNALR
 using WebApi2026.Hubs;
 
 //STRIP
@@ -82,7 +84,23 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSignalR();
 
 
+//////////////////////////// API'S EXTERNAS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+builder.Services.AddHttpClient("apiPDF", client =>
+{
+    client.BaseAddress = new Uri("https://servidor-sistema-vendas.up.railway.app/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+
+//////////////////////////// STRIP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+
 //////////////////////////// INSTANCES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+builder.Services.AddSingleton<WebSocket>();
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IGastoMensalService, GastoMensalService>();
@@ -90,23 +108,14 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProdutosService, ProdutosService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
+
+// SETTINGS
 builder.Services.AddScoped<FilesSettings>();
 builder.Services.AddScoped<TokenSettings>();
 builder.Services.AddScoped<CloudinarySettings>();
-builder.Services.AddHttpClient("apiPDF", client =>
-{
-    client.BaseAddress = new Uri("https://servidor-sistema-vendas.up.railway.app/");
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-});
-//builder.Services.AddSingleton<ChatHub>();
-//builder.Services.AddScoped<ChatHub>();
-
-builder.Services.AddSingleton<SalaManager>();
 
 ///////////////////////////////////////////////////////////////////////
 
-
-StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 var app = builder.Build();
 
@@ -119,8 +128,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// Rota do socket
-app.MapHub<ChatHub>("/chat");
+//ROUTER SOCKET
+app.MapHub<SignalRSettings>("/chat");
 
 app.UseHttpsRedirection();
 

@@ -12,9 +12,9 @@ public class StripeWebhookController : ControllerBase
 {
     private readonly string endpointSecret = "whsec_3AK6E4iZs9TOb0WpVCixISS1Zcf6Z4jQ";
     private readonly IPedidoService _service;
-    private readonly IHubContext<ChatHub> _hub;
+    private readonly IHubContext<SignalRSettings> _hub;
 
-    public StripeWebhookController(IPedidoService service, IHubContext<ChatHub> hub)
+    public StripeWebhookController(IPedidoService service, IHubContext<SignalRSettings> hub)
     {
         _service = service;
         _hub = hub;
