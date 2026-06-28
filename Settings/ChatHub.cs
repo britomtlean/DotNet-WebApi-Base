@@ -52,6 +52,7 @@ namespace WebApi2026.Hubs
             if (con != null)
             {
                 _sala.Salas.Remove(con);
+                Console.WriteLine($"Sala: {con.sala} desconectada");
             }
 
             await base.OnDisconnectedAsync(exception);
@@ -129,7 +130,7 @@ namespace WebApi2026.Hubs
                 {
                     if (sala.sala == "loja")
                     {
-                        Console.Write("Loja Online");
+                        Console.WriteLine("Loja Online");
 
                         // ENVIA SOMENTE PARA LOJA
                         await Clients.Group("loja")
