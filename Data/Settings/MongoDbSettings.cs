@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApi2026.Settings
+namespace WebApi2026.Data.Settings
 {
     public class MongoDbSettings
     {

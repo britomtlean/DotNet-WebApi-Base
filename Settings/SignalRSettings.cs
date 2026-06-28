@@ -13,25 +13,30 @@ namespace WebApi2026.Hubs
         public string id { get; set; } = null!;
         public string sala { get; set; } = null!;
     }
-    public class SalaManager
+
+
+    // ARMAZENA CONEXÕES
+    public class WebSocket
     {
-        public List<Conexao> Salas { get; } = new();
+        public List<Conexao> User { get; set; } = new();
     }
-    public class ChatHub : Hub
+
+
+    // CONFIGURAÇÕES
+    public class SignalRSettings : Hub
     {
         private readonly IPedidoService _service;
         private readonly HttpClient _httpClient;
+        private readonly WebSocket _conn;
 
-        private readonly SalaManager _sala;
-
-        public ChatHub(IPedidoService service, IHttpClientFactory httpClientFactory, SalaManager salaManager)
+        public SignalRSettings(IPedidoService service, IHttpClientFactory httpClientFactory, WebSocket connection)
         {
             _service = service;
             _httpClient = httpClientFactory.CreateClient("apiPDF");
-            _sala = salaManager;
+            _conn = connection;
         }
 
-        // Usuário conectou
+        // USUÁRIO CONECTADO
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine($"Usuário conectado: {Context.ConnectionId}");
@@ -39,20 +44,20 @@ namespace WebApi2026.Hubs
             await base.OnConnectedAsync();
         }
 
-        // Usuário desconectou
+        // USUÁRIO DESCONECTADO
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             Console.WriteLine($"Usuário desconectado: {Context.ConnectionId}");
 
             //RETORNA CONEXAO COM ID EQUIVALENTE
-            Conexao? con = _sala.Salas.FirstOrDefault(c => c.id == Context.ConnectionId);
+            Conexao? con = _conn.User.FirstOrDefault(u => u.id == Context.ConnectionId);
 
-            //SE CON NÃO EXISTIR RETORNA
+            //VERIFICA SE CONEXÃO EXISTE NA LISTA
 
             if (con != null)
             {
-                _sala.Salas.Remove(con);
-                Console.WriteLine($"Sala: {con.sala} desconectada");
+                _conn.User.Remove(con);
+                Console.WriteLine($"Usuário {con.id} saiu da sala {con.sala}");
             }
 
             await base.OnDisconnectedAsync(exception);
@@ -62,6 +67,7 @@ namespace WebApi2026.Hubs
         // ENTRAR NA SALA
         public async Task EntrarSala(string sala)
         {
+            //ADICIONAR VERIFICAÇÃO PARA ENTRAR NA SALA 'loja'
             await Groups.AddToGroupAsync(Context.ConnectionId, sala);
 
             Console.WriteLine($"{Context.ConnectionId} entrou na sala: {sala}");
@@ -69,10 +75,10 @@ namespace WebApi2026.Hubs
             //CONEXAO COM ID E NOME SALA
             var con = new Conexao{id = Context.ConnectionId, sala = sala};
 
-            //ARMAZENO NO ARRAY
-            if (!_sala.Salas.Any(c => c.id == Context.ConnectionId))
+            //VERIFIQUE SE EXISTE ALGUMA CONEXÃO COM O ID ARMAZENADO NO LISTA
+            if (!_conn.User.Any(c => c.id == Context.ConnectionId))
             {
-                _sala.Salas.Add(con);
+                _conn.User.Add(con);
             }
         }
 
@@ -83,26 +89,30 @@ namespace WebApi2026.Hubs
             Console.WriteLine($"{Context.ConnectionId} saiu da sala: {sala}");
 
             //RETORNA CONEXAO COM ID EQUIVALENTE
-            Conexao? con = _sala.Salas.FirstOrDefault(c => c.id == Context.ConnectionId);
+            Conexao? con = _conn.User.FirstOrDefault(u => u.id == Context.ConnectionId);
 
             if (con != null)
             {
-                _sala.Salas.Remove(con);
+                _conn.User.Remove(con);
             }
         }
 
 
 
-        // RECEBER PEDIDO
+        ///////////////////////// RECEBER PEDIDO \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         public async Task CreatePedido(Pedido pedido)
         // *O NOME DESTA FUNÇÃO DEVE SER CHAMADO NO connection.invoke() USADO NO FRONT*
         {
 
             Console.WriteLine($"____________________ Pedido Recebido _________________________");
 
+            /*
             Console.WriteLine(
                 JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
             );
+            */
+
+            Console.WriteLine($"ID do pedido: {pedido.Id}");
             Console.WriteLine("________________________________________________________");
 
 
@@ -111,34 +121,20 @@ namespace WebApi2026.Hubs
 
             try
             {
-                var confirm = await this._service.AdicionarPedido(pedido);
-
-                if(!confirm) throw new Exception("Erro ao registrar pedido");
-
-                {
-                    /*
-                    var res = await _httpClient.PostAsJsonAsync("gerarPDF", pedido);
-
-                    if (!res.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine(await res.Content.ReadAsStringAsync());
-                        return;
-                    }
-                */
-
-                foreach(var sala in _sala.Salas)
+                foreach(var sala in _conn.User)
                 {
                     if (sala.sala == "loja")
                     {
                         Console.WriteLine("Loja Online");
 
+                        var confirm = await this._service.AdicionarPedido(pedido);
+                        if (!confirm) throw new Exception("Erro ao registrar pedido");
+
                         // ENVIA SOMENTE PARA LOJA
-                        await Clients.Group("loja")
-                        .SendAsync("ReceiveMessage", pedido);
+                        await Clients.Group("loja").SendAsync("ReceiveMessage", pedido);
 
                         //ENVIA PARA CLIENTE
-                        await Clients.Group($"{pedido.ContatoCliente}")
-                            .SendAsync("ReceiveMessage", "Aguardando confirmação...");
+                        await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", "Aguardando confirmação...");
 
                         return;
 
@@ -151,12 +147,11 @@ namespace WebApi2026.Hubs
                 await Clients.Group($"{pedido.ContatoCliente}")
                         .SendAsync("ReceiveMessage", "Loja offline");
 
-                }
             }
             catch(Exception er)
             {
-                await Clients.Group($"{pedido.ContatoCliente}")
-                .SendAsync("ReceiveMessage", $"{er.Message}");
+                Console.WriteLine($"Excpetion: {er}");
+                await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", $"{er.Message}");
             }
 
         }

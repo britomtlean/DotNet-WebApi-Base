@@ -16,9 +16,9 @@ namespace WebApi2026.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly IPedidoService _service;
-        private readonly IHubContext<ChatHub> _hub;
+        private readonly IHubContext<SignalRSettings> _hub;
 
-        public PedidoController(IPedidoService service, IHubContext<ChatHub> hub)
+        public PedidoController(IPedidoService service, IHubContext<SignalRSettings> hub)
         {
             _service = service;
             _hub = hub;
