@@ -7,9 +7,15 @@ using System.Net.Http;
 
 namespace WebApi2026.Hubs
 {
+
+    public class Conexao
+    {
+        public string id { get; set; } = null!;
+        public string sala { get; set; } = null!;
+    }
     public class SalaManager
     {
-        public List<string> Salas { get; } = new();
+        public List<Conexao> Salas { get; } = new();
     }
     public class ChatHub : Hub
     {
@@ -38,7 +44,18 @@ namespace WebApi2026.Hubs
         {
             Console.WriteLine($"Usuário desconectado: {Context.ConnectionId}");
 
+            //RETORNA CONEXAO COM ID EQUIVALENTE
+            Conexao? con = _sala.Salas.FirstOrDefault(c => c.id == Context.ConnectionId);
+
+            //SE CON NÃO EXISTIR RETORNA
+
+            if (con != null)
+            {
+                _sala.Salas.Remove(con);
+            }
+
             await base.OnDisconnectedAsync(exception);
+
         }
 
         // ENTRAR NA SALA
@@ -48,9 +65,13 @@ namespace WebApi2026.Hubs
 
             Console.WriteLine($"{Context.ConnectionId} entrou na sala: {sala}");
 
-            if (!_sala.Salas.Contains(sala))
+            //CONEXAO COM ID E NOME SALA
+            var con = new Conexao{id = Context.ConnectionId, sala = sala};
+
+            //ARMAZENO NO ARRAY
+            if (!_sala.Salas.Any(c => c.id == Context.ConnectionId))
             {
-                _sala.Salas.Add(sala);
+                _sala.Salas.Add(con);
             }
         }
 
@@ -58,7 +79,15 @@ namespace WebApi2026.Hubs
         public async Task SairSala(string sala)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
-            _sala.Salas.Remove(sala);
+            Console.WriteLine($"{Context.ConnectionId} saiu da sala: {sala}");
+
+            //RETORNA CONEXAO COM ID EQUIVALENTE
+            Conexao? con = _sala.Salas.FirstOrDefault(c => c.id == Context.ConnectionId);
+
+            if (con != null)
+            {
+                _sala.Salas.Remove(con);
+            }
         }
 
 
@@ -83,8 +112,10 @@ namespace WebApi2026.Hubs
             {
                 var confirm = await this._service.AdicionarPedido(pedido);
 
-                if(confirm == true)
+                if(!confirm) throw new Exception("Erro ao registrar pedido");
+
                 {
+                    /*
                     var res = await _httpClient.PostAsJsonAsync("gerarPDF", pedido);
 
                     if (!res.IsSuccessStatusCode)
@@ -92,29 +123,32 @@ namespace WebApi2026.Hubs
                         Console.WriteLine(await res.Content.ReadAsStringAsync());
                         return;
                     }
+                */
 
-                    foreach(var sala in _sala.Salas)
+                foreach(var sala in _sala.Salas)
+                {
+                    if (sala.sala == "loja")
                     {
-                        if (sala == "loja")
-                        {
-                            // ENVIA SOMENTE PARA LOJA
-                            await Clients.Group("loja")
-                                .SendAsync("ReceiveMessage", pedido);
+                        Console.Write("Loja Online");
 
-                            //ENVIA PARA CLIENTE
-                            await Clients.Group($"{pedido.ContatoCliente}")
-                                .SendAsync("ReceiveMessage", "Aguardando confirmação...");
+                        // ENVIA SOMENTE PARA LOJA
+                        await Clients.Group("loja")
+                        .SendAsync("ReceiveMessage", pedido);
 
-                            return;
+                        //ENVIA PARA CLIENTE
+                        await Clients.Group($"{pedido.ContatoCliente}")
+                            .SendAsync("ReceiveMessage", "Aguardando confirmação...");
 
-                        }
+                        return;
 
                     }
 
-                    Console.Write("Loja offline");
+                }
 
-                    await Clients.Group($"{pedido.ContatoCliente}")
-                            .SendAsync("ReceiveMessage", "Loja offline");
+                Console.Write("Loja Offline");
+
+                await Clients.Group($"{pedido.ContatoCliente}")
+                        .SendAsync("ReceiveMessage", "Loja offline");
 
                 }
             }
