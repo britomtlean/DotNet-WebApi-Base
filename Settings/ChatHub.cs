@@ -145,7 +145,7 @@ namespace WebApi2026.Hubs
 
                 }
 
-                Console.Write("Loja Offline");
+                Console.WriteLine("Loja Offline");
 
                 await Clients.Group($"{pedido.ContatoCliente}")
                         .SendAsync("ReceiveMessage", "Loja offline");
