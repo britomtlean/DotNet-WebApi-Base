@@ -14,11 +14,13 @@ namespace WebApi2026.Services
     {
         private readonly IMongoCollection<Pedido> _pedido;
         private readonly IMongoCollection<Produto> _produto;
+        private readonly HttpClient _httpClient;
 
-        public PedidoService(AppDbContext context)
+        public PedidoService(AppDbContext context, IHttpClientFactory httpClientFactory)
         {
             _pedido = context.Pedido;
             _produto = context.Produto;
+            _httpClient = httpClientFactory.CreateClient("apiPDF");
         }
 
         public async Task<Boolean> AdicionarPedido(Pedido pedido)
@@ -58,6 +60,14 @@ namespace WebApi2026.Services
         public async Task<Boolean> ConfirmarPedido(Pedido pedido)
         {
             await _pedido.UpdateOneAsync(p => p.Id == pedido.Id, Builders<Pedido>.Update.Set(p => p.Status, true));
+
+            var res = await _httpClient.PostAsJsonAsync("gerarPDF", pedido);
+
+            if (!res.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Erro ao gerar pdf");
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+            }
 
             return true;
         }
