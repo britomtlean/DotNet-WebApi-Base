@@ -16,33 +16,36 @@ namespace WebApi2026.Controllers
     {
 
         [HttpPost]
-        public IActionResult CreateCheckout()
+        public IActionResult CreateCheckout([FromBody] Pedido pedido)
         {
 
-            var pedido = new Pedido
+            var lineItems = new List<SessionLineItemOptions>();
+
+            foreach (var produto in pedido.Produtos)
             {
-                Produtos = new List<ProdutoPedido>
+                lineItems.Add(
+                new SessionLineItemOptions
                 {
-                    new ProdutoPedido
+                    Quantity = produto.Quantidade,
+
+                    PriceData = new SessionLineItemPriceDataOptions
                     {
-                        ProdutoId = "6a10d5b7ae6f124854579c0e",
-                        Nome = "Top Jet",
-                        Quantidade = 1,
-                        ValorUnitario = 10,
-                        Subtotal = 10
+                        Currency = "brl",
+
+                        // Stripe trabalha em centavos
+                        UnitAmount = (long)(produto.ValorUnitario * 100),
+
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = produto.Nome
+                        }
                     }
-                },
+                });
+            }
 
-                ValorTotal = 10,
-
-                NomeCliente = "Teste Cliente 1",
-
-                ContatoCliente = "123",
-
-                EnderecoCliente = "Rua X"
-            };
 
             var pedidoJson = JsonSerializer.Serialize(pedido);
+            Console.WriteLine(pedidoJson);
 
 
             var options = new SessionCreateOptions
@@ -52,31 +55,13 @@ namespace WebApi2026.Controllers
                     "card"
                 },
                 //CARRINHO
-                LineItems = new List<SessionLineItemOptions>
-                {
-                    new SessionLineItemOptions
-                    {
-                        Quantity = 1,
-
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = "brl",
-
-                            UnitAmount = 1000,
-
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = "Top Jet"
-                            }
-                        }
-                    }
-                },
+                LineItems = lineItems,
                 Mode = "payment",
                 SuccessUrl = "http://localhost:5174/sucesso",
                 CancelUrl = "http://localhost:5174/cancelado",
                 Metadata = new Dictionary<string, string>
                 {
-                    { "pedido", pedidoJson }
+                    { "pedido", pedido.Id }
                 }
             };
 
