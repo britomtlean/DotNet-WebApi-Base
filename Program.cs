@@ -143,6 +143,7 @@ var provider = new FileExtensionContentTypeProvider();
 
 provider.Mappings[".avif"] = "image/avif";
 
+//ROTEAMENTO 
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
