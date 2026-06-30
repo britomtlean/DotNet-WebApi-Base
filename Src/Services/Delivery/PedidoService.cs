@@ -67,6 +67,7 @@ namespace WebApi2026.Services
             {
                 Console.WriteLine("Erro ao gerar pdf");
                 Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Erro ao gerar PDF");
             }
 
             return true;
@@ -85,5 +86,16 @@ namespace WebApi2026.Services
             return pedidos;
         }
 
+        public async Task<Pedido> PedidoId(string id)
+        {
+            Pedido pedido = await this._pedido.Find(p => p.Id == id).FirstOrDefaultAsync();
+
+            if(pedido == null)
+            {
+                throw new Exception("Pedido não encontrado");
+            }
+
+            return pedido;
+        }
     }
 }

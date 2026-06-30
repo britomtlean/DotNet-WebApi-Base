@@ -5,20 +5,22 @@ namespace WebApi2026.Entities
 {
     public class Pedido
     {
+
+        ////////////////// GERA AUTOMÁTICO\\\\\\\\\\\\\\\\\\\
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
 
-        //public string? FuncionarioId { get; set; }
-
-        //public string? NomeFuncionario { get; set; }
-
         public DateTime DataPedido { get; set; } = DateTime.UtcNow;
+
+        ////////////////////////////////////////////////////
 
         public List<ProdutoPedido> Produtos { get; set; } = new();
 
         public double ValorTotal { get; set; }
 
+        /////////////// RECEBE NULL \\\\\\\\\\\\\\\\\\\\\\\
         public bool? Status { get; set; }
 
         public string? NomeCliente { get; set; }
@@ -26,6 +28,8 @@ namespace WebApi2026.Entities
         public string? ContatoCliente { get; set; }
 
         public string? EnderecoCliente { get; set; }
+
+        ///////////////////////////////////////////////////
 
     }
 }

@@ -16,5 +16,7 @@ namespace WebApi2026.Interfaces
         public Task<Boolean> CancelarPedido(Pedido pedido);
 
         public Task<List<Pedido>> RetornarPedido();
+
+        public Task<Pedido> PedidoId(string id);
     }
 }
