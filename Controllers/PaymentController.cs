@@ -25,14 +25,16 @@ namespace WebApi2026.Controllers
         [HttpPost]
         public IActionResult CreateCheckout([FromBody] Pedido pedido)
         {
+            Console.WriteLine($"_______________________________________________________");
             // CONVERTE EM JSON
             Console.WriteLine($"SOLICITAÇÃO DE PAGAMENTO ONLINE\nPEDIDO: {pedido.Id} RECEBIDO");
+            Console.WriteLine("________________________________________________________");
 
             try
             {
                 /////////////// SALVAR PEDIDO \\\\\\\\\\\\\\\\\
                 this._service.AdicionarPedido(pedido);
-                Console.WriteLine($"Pedido {pedido.Id} gerado com sucesso");
+                Console.WriteLine($"Pedido registrado na database");
                 //////////////////////////////////////////////
 
                 ///////////// LISTA DE PRODUTOS \\\\\\\\\\\\\\\\\\\
@@ -98,6 +100,7 @@ namespace WebApi2026.Controllers
             }
             catch (Exception error)
             {
+                Console.WriteLine(error.ToString());
                 return BadRequest(error.Message);
             }
 
