@@ -125,10 +125,10 @@ namespace WebApi2026.Hubs
                 {
                     if (sala.sala == "loja")
                     {
-                        Console.WriteLine("Loja Online");
+                        Console.WriteLine("Status da Loja: Online");
 
                         var confirm = await this._service.AdicionarPedido(pedido);
-                        if (!confirm) throw new Exception("Erro ao registrar pedido");
+                        Console.WriteLine($"Pedido {pedido.Id} gerado com sucesso");
 
                         // ENVIA SOMENTE PARA LOJA
                         await Clients.Group("loja").SendAsync("ReceiveMessage", pedido);
@@ -136,16 +136,21 @@ namespace WebApi2026.Hubs
                         //ENVIA PARA CLIENTE
                         await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", "Aguardando confirmação...");
 
+                        Console.WriteLine("Pedido enviado");
+
                         return;
 
                     }
 
                 }
 
-                Console.WriteLine("Loja Offline");
+                Console.WriteLine("Status da Loja: Offline");
 
                 await Clients.Group($"{pedido.ContatoCliente}")
                         .SendAsync("ReceiveMessage", "Loja offline");
+
+                Console.WriteLine("Pedido cancelado");
+
 
             }
             catch(Exception er)

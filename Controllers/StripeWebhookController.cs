@@ -41,21 +41,14 @@ public class StripeWebhookController : ControllerBase
                 Console.WriteLine("Pagamento confirmado!");
 
                 var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
-                Console.WriteLine("1");
-
                 var dadosPedido = paymentIntent.Metadata["pedido"];
-                Console.WriteLine("2");
-                Console.WriteLine($"Dados do pedido recebidos: {dadosPedido}");
-                Console.WriteLine("3");
+                Console.WriteLine("Dados recebidos");
 
                 Pedido pedido = await this._service.PedidoId(dadosPedido);
-                Console.WriteLine("4");
-                Console.WriteLine($"Pedido retornado: {pedido}");
-                Console.WriteLine("5");
-
+                Console.WriteLine("Dados confirmados");
 
                 var resultado = await _service.ConfirmarPedido(pedido);
-                Console.WriteLine("6");
+                Console.WriteLine("Pedido confirmado");
 
                 await _hub.Clients
                     .Group($"loja")

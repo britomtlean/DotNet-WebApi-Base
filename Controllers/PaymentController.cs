@@ -32,7 +32,7 @@ namespace WebApi2026.Controllers
             {
                 /////////////// SALVAR PEDIDO \\\\\\\\\\\\\\\\\
                 this._service.AdicionarPedido(pedido);
-
+                Console.WriteLine($"Pedido {pedido.Id} gerado com sucesso");
                 //////////////////////////////////////////////
 
                 ///////////// LISTA DE PRODUTOS \\\\\\\\\\\\\\\\\\\

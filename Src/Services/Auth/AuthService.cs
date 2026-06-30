@@ -28,9 +28,8 @@ namespace WebApi2026.Services
 
         public async Task<string> Login(Login login)
         {
-            Console.WriteLine("Dados recebidos:");
+            Console.WriteLine("SOLICITAÇÃO DE LOGIN:");
             Console.WriteLine($"CPF: {login.Cpf}");
-            Console.WriteLine($"Senha: {login.Password}");
 
             var loginTrue = await _usuario.Find(user => user.Cpf == login.Cpf).FirstOrDefaultAsync();
 
@@ -46,6 +45,7 @@ namespace WebApi2026.Services
             }
 
             var token = _tokenSettings.GerarToken(loginTrue.Cpf);
+            Console.WriteLine($"USUÁRIO {login.Cpf} AUTENTICADO COM SUCESSO");
             return token;
         }
 
