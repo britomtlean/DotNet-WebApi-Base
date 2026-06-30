@@ -40,10 +40,10 @@ public class StripeWebhookController : ControllerBase
             {
                 Console.WriteLine("Pagamento confirmado!");
 
-                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
 
 
-                var dadosPedido = session.Metadata["pedido"];
+                var dadosPedido = paymentIntent.Metadata["pedido"];
                 Console.WriteLine($"Dados do pedido recebidos: {dadosPedido}");
 
                 Pedido pedido = await this._service.PedidoId(dadosPedido);
