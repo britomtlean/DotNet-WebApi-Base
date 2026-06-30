@@ -24,6 +24,8 @@ public class StripeWebhookController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> StripeWebHook()
     {
+        Console.WriteLine($"____________________ WEBHOOK RECEBIDO _________________________");
+
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
         try
@@ -38,7 +40,7 @@ public class StripeWebhookController : ControllerBase
 
             if (stripeEvent.Type == "payment_intent.created")
             {
-                Console.WriteLine("Instancia de pagamento inicializada");
+                Console.WriteLine("payment_intent.created ok");
                 return Ok();
             }
 
@@ -48,7 +50,7 @@ public class StripeWebhookController : ControllerBase
 
             if (stripeEvent.Type == "charge.succeeded")
             {
-                Console.WriteLine("Cobrança efetivada");
+                Console.WriteLine("charge.succeeded Ok");
                 return Ok();
             }
 
@@ -62,9 +64,14 @@ public class StripeWebhookController : ControllerBase
 
                 var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
                 var dadosPedido = paymentIntent.Metadata["pedido"];
-                Console.WriteLine("Dados recebidos");
 
                 Pedido pedido = await this._service.PedidoId(dadosPedido);
+
+                if(pedido == null)
+                {
+                    throw new Exception($"Erro ao processar pedido {dadosPedido}");
+                }
+
                 Console.WriteLine("Dados recebidos confirmados");
 
                 var resultado = await _service.ConfirmarPedido(pedido);
