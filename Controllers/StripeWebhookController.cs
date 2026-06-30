@@ -14,6 +14,7 @@ public class StripeWebhookController : ControllerBase
     private readonly IPedidoService _service;
     private readonly IHubContext<SignalRSettings> _hub;
 
+
     public StripeWebhookController(IPedidoService service, IHubContext<SignalRSettings> hub)
     {
         _service = service;
@@ -33,28 +34,23 @@ public class StripeWebhookController : ControllerBase
                 endpointSecret
             );
 
-            // Pagamento concluído
+            ////////////////// PAGAMENTO CONCLUIDO \\\\\\\\\\\\\\\\\\\\\\
+
             if (stripeEvent.Type == "payment_intent.succeeded")
             {
-                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-
-                //BODY
-                //var pedidoJson = session.Metadata["pedido"];
-                //var pedido = JsonSerializer.Deserialize<Pedido>(pedidoJson);
-
-                var pedidoJson = session.Metadata["pedido"];
-                var pedido = JsonSerializer.Deserialize<Pedido>(pedidoJson);
-
-
-
                 Console.WriteLine("Pagamento confirmado!");
 
-                var resultado = await _service.AdicionarPedido(pedido);
+                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                if (!resultado)
-                {
-                    return BadRequest("Erro ao confirmar pedido");
-                }
+
+                var dadosPedido = session.Metadata["pedido"];
+                Console.WriteLine($"Dados do pedido recebidos: {dadosPedido}");
+
+                Pedido pedido = await this._service.PedidoId(dadosPedido);
+                Console.WriteLine($"Pedido retornado: {pedido}");
+
+
+                var resultado = await _service.ConfirmarPedido(pedido);
 
                 await _hub.Clients
                     .Group($"loja")
@@ -70,17 +66,12 @@ public class StripeWebhookController : ControllerBase
                         $"Pedido: {pedido.Id} confirmado!"
                     );
 
+                return Ok();
             }
 
-            // PaymentIntent pago
-            if (stripeEvent.Type == "payment_intent.succeeded")
-            {
-                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+            //////////////////////////////////////////////////////////////
 
-                Console.WriteLine($"Pagamento aprovado: {paymentIntent.Id}");
-            }
-
-            return Ok();
+            return BadRequest("Pagamento não aprovado");
         }
         catch (Exception ex)
         {

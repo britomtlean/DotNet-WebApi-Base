@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout; //STRIP
 using WebApi2026.Entities;
 using System.Text.Json;
+using WebApi2026.Interfaces;
 
 namespace WebApi2026.Controllers
 {
@@ -14,64 +15,85 @@ namespace WebApi2026.Controllers
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
+        private readonly IPedidoService _service;
+
+        public PaymentController(IPedidoService service)
+        {
+            this._service = service;
+        }
 
         [HttpPost]
         public IActionResult CreateCheckout([FromBody] Pedido pedido)
         {
+            // CONVERTE EM JSON
+            Console.WriteLine($"SOLICITAÇÃO DE PAGAMENTO ONLINE\nPEDIDO: {pedido.Id} RECEBIDO");
 
-            var lineItems = new List<SessionLineItemOptions>();
-
-            foreach (var produto in pedido.Produtos)
+            try
             {
-                lineItems.Add(
-                new SessionLineItemOptions
+                /////////////// SALVAR PEDIDO \\\\\\\\\\\\\\\\\
+                this._service.AdicionarPedido(pedido);
+
+                //////////////////////////////////////////////
+
+                ///////////// LISTA DE PRODUTOS \\\\\\\\\\\\\\\\\\\
+                var lineItems = new List<SessionLineItemOptions>();
+
+                foreach (var produto in pedido.Produtos)
                 {
-                    Quantity = produto.Quantidade,
-
-                    PriceData = new SessionLineItemPriceDataOptions
+                    lineItems.Add(
+                    new SessionLineItemOptions
                     {
-                        Currency = "brl",
+                        Quantity = produto.Quantidade,
 
-                        // Stripe trabalha em centavos
-                        UnitAmount = (long)(produto.ValorUnitario * 100),
-
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        PriceData = new SessionLineItemPriceDataOptions
                         {
-                            Name = produto.Nome
+                            Currency = "brl",
+
+                            // Stripe trabalha em centavos
+                            UnitAmount = (long)(produto.ValorUnitario * 100),
+
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = produto.Nome
+                            }
                         }
+                    });
+                }
+
+                /////////////////////////////////////////////////
+
+                //////////////// CONFIGURAÇÕES \\\\\\\\\\\\\\\\\\
+                var options = new SessionCreateOptions
+                {
+                    PaymentMethodTypes = new List<string>
+                    {
+                        "card"
+                    },
+                    LineItems = lineItems, //CARRINHO
+                    Mode = "payment",
+                    SuccessUrl = "https://www.google.com/?zx=1782782819848",
+                    CancelUrl = "https://www.bing.com/?cc=br",
+                    Metadata = new Dictionary<string, string>
+                    {
+                        { "pedido", pedido.Id }
                     }
+                };
+                //////////////////////////////////////////////////
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                return Ok(new
+                {
+                    url = session.Url
                 });
+
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
             }
 
-
-            var pedidoJson = JsonSerializer.Serialize(pedido);
-            Console.WriteLine(pedidoJson);
-
-
-            var options = new SessionCreateOptions
-            {
-                PaymentMethodTypes = new List<string>
-                {
-                    "card"
-                },
-                //CARRINHO
-                LineItems = lineItems,
-                Mode = "payment",
-                SuccessUrl = "http://localhost:5174/sucesso",
-                CancelUrl = "http://localhost:5174/cancelado",
-                Metadata = new Dictionary<string, string>
-                {
-                    { "pedido", pedido.Id }
-                }
-            };
-
-            var service = new SessionService();
-            Session session = service.Create(options);
-
-            return Ok(new
-            {
-                url = session.Url
-            });
         }
     }
 }
