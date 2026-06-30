@@ -48,6 +48,7 @@ public class StripeWebhookController : ControllerBase
                 Console.WriteLine("Dados confirmados");
 
                 var resultado = await _service.ConfirmarPedido(pedido);
+                pedido = await this._service.PedidoId(dadosPedido);
                 Console.WriteLine("Pedido confirmado");
 
                 await _hub.Clients
