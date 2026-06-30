@@ -40,17 +40,22 @@ public class StripeWebhookController : ControllerBase
             {
                 Console.WriteLine("Pagamento confirmado!");
 
-                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
-
+                var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
+                Console.WriteLine("1");
 
                 var dadosPedido = paymentIntent.Metadata["pedido"];
+                Console.WriteLine("2");
                 Console.WriteLine($"Dados do pedido recebidos: {dadosPedido}");
+                Console.WriteLine("3");
 
                 Pedido pedido = await this._service.PedidoId(dadosPedido);
+                Console.WriteLine("4");
                 Console.WriteLine($"Pedido retornado: {pedido}");
+                Console.WriteLine("5");
 
 
                 var resultado = await _service.ConfirmarPedido(pedido);
+                Console.WriteLine("6");
 
                 await _hub.Clients
                     .Group($"loja")
@@ -75,6 +80,7 @@ public class StripeWebhookController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.ToString());
             return BadRequest($"Webhook Error: {ex.Message}");
         }
     }

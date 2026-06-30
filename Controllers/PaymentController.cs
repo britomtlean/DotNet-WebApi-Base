@@ -76,6 +76,13 @@ namespace WebApi2026.Controllers
                     Metadata = new Dictionary<string, string>
                     {
                         { "pedido", pedido.Id }
+                    },
+                    PaymentIntentData = new SessionPaymentIntentDataOptions
+                    {
+                        Metadata = new Dictionary<string, string>
+                        {
+                            { "pedido", pedido.Id }
+                        }
                     }
                 };
                 //////////////////////////////////////////////////
