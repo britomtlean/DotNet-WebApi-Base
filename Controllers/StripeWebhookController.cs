@@ -22,7 +22,7 @@ public class StripeWebhookController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Handle()
+    public async Task<IActionResult> StripeWebHook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
@@ -33,6 +33,26 @@ public class StripeWebhookController : ControllerBase
                 Request.Headers["Stripe-Signature"],
                 endpointSecret
             );
+
+            ////////////////// PAGAMENTO INICIADO \\\\\\\\\\\\\\\\\\\\\\
+
+            if (stripeEvent.Type == "payment_intent.created")
+            {
+                Console.WriteLine("Instancia de pagamento inicializada");
+                return Ok();
+            }
+
+            ////////////////////////////////////////////////////////////
+
+            ////////////////// COBRANÇA REALIZADA \\\\\\\\\\\\\\\\\\\\\\
+
+            if (stripeEvent.Type == "charge.succeeded")
+            {
+                Console.WriteLine("Cobrança efetivada");
+                return Ok();
+            }
+
+            ///////////////////////////////////////////////////////////
 
             ////////////////// PAGAMENTO CONCLUIDO \\\\\\\\\\\\\\\\\\\\\\
 
@@ -45,11 +65,10 @@ public class StripeWebhookController : ControllerBase
                 Console.WriteLine("Dados recebidos");
 
                 Pedido pedido = await this._service.PedidoId(dadosPedido);
-                Console.WriteLine("Dados confirmados");
+                Console.WriteLine("Dados recebidos confirmados");
 
                 var resultado = await _service.ConfirmarPedido(pedido);
                 pedido = await this._service.PedidoId(dadosPedido);
-                Console.WriteLine(pedido.Status);
                 Console.WriteLine("Pedido confirmado");
 
                 await _hub.Clients
@@ -70,6 +89,17 @@ public class StripeWebhookController : ControllerBase
             }
 
             //////////////////////////////////////////////////////////////
+
+            ////////////////// CHECKOUT CONCLUIDO \\\\\\\\\\\\\\\\\\\\\\
+
+            if (stripeEvent.Type == "checkout.session.completed")
+            {
+                Console.WriteLine("checkout concluído");
+                return Ok();
+            }
+
+            ////////////////////////////////////////////////////////////
+
 
             return BadRequest("Pagamento não aprovado");
         }
