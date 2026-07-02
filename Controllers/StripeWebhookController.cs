@@ -10,15 +10,16 @@ using System.Text.Json;
 [Route("api/stripe/webhook")]
 public class StripeWebhookController : ControllerBase
 {
-    private readonly string endpointSecret = "whsec_3AK6E4iZs9TOb0WpVCixISS1Zcf6Z4jQ";
+    private readonly string _endpointSecret;
     private readonly IPedidoService _service;
     private readonly IHubContext<SignalRSettings> _hub;
 
 
-    public StripeWebhookController(IPedidoService service, IHubContext<SignalRSettings> hub)
+    public StripeWebhookController(IPedidoService service, IHubContext<SignalRSettings> hub, IConfiguration configuration)
     {
         _service = service;
         _hub = hub;
+        _endpointSecret = configuration["Stripe:WebhookSecret"];
     }
 
     [HttpPost]
@@ -33,7 +34,7 @@ public class StripeWebhookController : ControllerBase
             var stripeEvent = EventUtility.ConstructEvent(
                 json,
                 Request.Headers["Stripe-Signature"],
-                endpointSecret
+                _endpointSecret
             );
 
             ////////////////// PAGAMENTO INICIADO \\\\\\\\\\\\\\\\\\\\\\
