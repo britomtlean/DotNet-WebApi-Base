@@ -23,7 +23,7 @@ namespace WebApi2026.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCheckout([FromBody] Pedido pedido)
+        public async Task<IActionResult> CreateCheckout([FromBody] Pedido pedido)
         {
             Console.WriteLine($"_______________________________________________________");
             // CONVERTE EM JSON
@@ -33,7 +33,7 @@ namespace WebApi2026.Controllers
             try
             {
                 /////////////// SALVAR PEDIDO \\\\\\\\\\\\\\\\\
-                this._service.AdicionarPedido(pedido);
+                await this._service.AdicionarPedido(pedido);
                 Console.WriteLine($"Pedido registrado na database");
                 //////////////////////////////////////////////
 
