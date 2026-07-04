@@ -24,41 +24,6 @@ namespace WebApi2026.Controllers
             _hub = hub;
         }
 
-        // LOJA CONFIRMA O PEDIDO PAGO NA ENTREGA
-        /* LOJA SALVA O PEDIDO NO BANCO
-        [HttpPost]
-        public async Task<IActionResult> SalvarPedido([FromBody] Pedido pedido)
-        {
-            try
-            {
-                var resultado = await _service.AdicionarPedido(pedido);
-
-                if (!resultado)
-                {
-                    return BadRequest("Erro ao confirmar pedido");
-                }
-
-                await _hub.Clients
-                    .Group($"{pedido.ContatoCliente}")
-                    .SendAsync(
-                        "ReceiveMessage",
-                        $"Pedido confirmado!"
-                    );
-
-                return Ok("Pedido confirmado");
-            }
-            catch(Exception er)
-            {
-                {
-                    return BadRequest($"{er.Message}");
-                }
-            }
-        }
-        */
-
-
-
-
 
         [HttpGet]
         public async Task<IActionResult> RetornarPedidos()
@@ -70,6 +35,7 @@ namespace WebApi2026.Controllers
             }
             catch(Exception er)
             {
+                Console.WriteLine(er.ToString());
                 return BadRequest(er.Message);
             }
         }
@@ -114,6 +80,7 @@ namespace WebApi2026.Controllers
             }
             catch (Exception er)
             {
+                Console.WriteLine(er.ToString());
                 return BadRequest(er.Message);
             }
         }

@@ -81,6 +81,11 @@ namespace WebApi2026.Services
 
             await this._produtosCollection.UpdateOneAsync(
                 p => p.Id == id,
+                Builders<Produto>.Update.Set(p => p.Descricao, update.Descricao)
+            );
+
+            await this._produtosCollection.UpdateOneAsync(
+                p => p.Id == id,
                 Builders<Produto>.Update.Set(p => p.Valor, update.Valor)
             );
 
