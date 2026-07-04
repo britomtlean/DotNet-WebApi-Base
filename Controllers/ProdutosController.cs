@@ -19,11 +19,10 @@ namespace WebApi2026.Controllers
             this._service = service;
         }
 
-        // Rotas
 
         //[Authorize]
         [HttpPost]
-        public async Task<IActionResult> Take([FromForm] Produto produto, IFormFile arquivo)
+        public async Task<IActionResult> TakeAndCreate([FromForm] Produto produto, IFormFile arquivo)
         {
             try
             {
@@ -38,9 +37,10 @@ namespace WebApi2026.Controllers
 
         //[Authorize]
         [HttpGet]
-        public async Task<IActionResult> Send()
+        public async Task<IActionResult> SendAll()
         {
-            try{
+            try
+            {
                 var produtos = await _service.ReturnProducts();
                 return Ok(produtos);
             }
@@ -52,18 +52,34 @@ namespace WebApi2026.Controllers
 
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] Produto data)
+        public async Task<IActionResult> TakeAndUpdate([FromRoute] string id, [FromForm] Produto data)
         {
-            var message = await _service.UpdateProduct(id, data);
-            return Ok(message);
+            try
+            {
+                var message = await _service.UpdateProduct(id, data);
+                return Ok(message);
+            }
+            catch(Exception er)
+            {
+                Console.WriteLine(er.ToString());
+                return BadRequest(er.Message);
+            }
         }
 
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
-            var message = await _service.DeleteProduct(id);
-            return Ok(message);
+            try
+            {
+                var message = await _service.DeleteProduct(id);
+                return Ok(message);
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.ToString());
+                return BadRequest(er.Message);
+            }
         }
     }
 }
