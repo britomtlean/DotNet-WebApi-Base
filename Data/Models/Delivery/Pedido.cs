@@ -23,6 +23,14 @@ namespace WebApi2026.Entities
         /////////////// RECEBE NULL \\\\\\\\\\\\\\\\\\\\\\\
         public bool? Status { get; set; }
 
+        public string? StatusEntrega { get; set; }
+
+        //Aguardando confirmação -- Pedido criado
+        //Em andamento -- Pago Online ou loja confirmou
+        //Entregue -- Cliente confirma
+        //Não Entregue -- Cliente cancelou após 80 min de espera
+        //Cliente ganha pontos ao confirmar a entrga
+
         public string? NomeCliente { get; set; }
 
         public string? ContatoCliente { get; set; }
