@@ -23,32 +23,11 @@ namespace WebApi2026.Controllers
 
         //////////////////////////// ROUTERS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] Usuario usuario)
-        {
-            if (usuario == null)
-                return BadRequest("Dados inválidos");
-
-            await _service.Create(usuario);
-
-            return Ok(usuario);
-        }
-
-        [Authorize]
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetAll()
-        {
-            var usuarios = await _service.GetAll();
-
-            return Ok(usuarios);
-
-        }
-
         [Authorize]
         [HttpGet("profile")]
         public async Task<IActionResult> GetUnique()
         {
-            var cpf = User.Identity?.Name;
+            var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
             var usuario = await _service.GetUnique(cpf);
 
             if (usuario == null)
@@ -56,21 +35,6 @@ namespace WebApi2026.Controllers
 
 
             return Ok(usuario);
-        }
-
-        [Authorize]
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(string id)
-        {
-            return Ok(await _service.Delete(id));
-        }
-
-        [Authorize]
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update([FromBody] string nome, string id)
-        {
-            await _service.UpdateNome(id, nome);
-            return Ok("Atualizado com sucesso");
         }
     }
 }

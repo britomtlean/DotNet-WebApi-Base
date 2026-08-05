@@ -20,7 +20,7 @@ namespace WebApi2026.Services
             _cloudinary = cloudinary;
         }
 
-        public async Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo)
+        public async Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo, string cpf)
         {
 
             // UPLOAD DE ARQUIVOS NO SERVIDOR
@@ -43,6 +43,7 @@ namespace WebApi2026.Services
                     Valor = produto.Valor,
                     Categoria = produto.Categoria,
                     Estoque = produto.Estoque,
+                    Cpf = cpf,
                     Imagem = diretorioImagem
                 }
             );
@@ -61,43 +62,34 @@ namespace WebApi2026.Services
             return produtos;
         }
 
-        public async Task<Object> UpdateProduct(string id, Produto update)
+        public async Task<Object> UpdateProduct(string id, Produto update, string cpf)
         {
-            var produto = await _produtosCollection.Find(p => p.Id == id)
+            var produto = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
                                        .FirstOrDefaultAsync();
 
             if (produto == null)
                 return "Produto não encontrado";
 
-            await this._produtosCollection.UpdateOneAsync(
-                p => p.Id == id,
-                Builders<Produto>.Update.Set(p => p.Disponibilidade, update.Disponibilidade )
+            var updateDefinition = Builders<Produto>.Update
+                .Set(p => p.Disponibilidade, update.Disponibilidade)
+                .Set(p => p.Nome, update.Nome)
+                .Set(p => p.Descricao, update.Descricao)
+                .Set(p => p.Valor, update.Valor);
+
+            await _produtosCollection.UpdateOneAsync(
+                p => p.Id == id && p.Cpf == cpf,
+                updateDefinition
             );
 
-            await this._produtosCollection.UpdateOneAsync(
-                p => p.Id == id,
-                Builders<Produto>.Update.Set(p => p.Nome, update.Nome)
-            );
-
-            await this._produtosCollection.UpdateOneAsync(
-                p => p.Id == id,
-                Builders<Produto>.Update.Set(p => p.Descricao, update.Descricao)
-            );
-
-            await this._produtosCollection.UpdateOneAsync(
-                p => p.Id == id,
-                Builders<Produto>.Update.Set(p => p.Valor, update.Valor)
-            );
-
-            produto = await _produtosCollection.Find(p => p.Id == id)
+            produto = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
                                        .FirstOrDefaultAsync();
 
             return new {produto};
         }
 
-        public async Task<bool> DeleteProduct(string id)
+        public async Task<bool> DeleteProduct(string id, string cpf)
         {
-            await _produtosCollection.DeleteOneAsync(p => p.Id == id);
+            await _produtosCollection.DeleteOneAsync(p => p.Id == id && p.Cpf == cpf);
 
             return true;
         }
