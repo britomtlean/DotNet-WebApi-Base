@@ -25,15 +25,8 @@ namespace WebApi2026.Context
         public IMongoCollection<Usuario> Usuarios =>
             _database.GetCollection<Usuario>("Usuarios");
 
-
-        public IMongoCollection<GastoMensal> GastosMensais =>
-            _database.GetCollection<GastoMensal>("GastosMensais");
-
         public IMongoCollection<Produto> Produto =>
             _database.GetCollection<Produto>("Produtos");
-
-        public IMongoCollection<Cliente> Cliente =>
-            _database.GetCollection<Cliente>("Clientes");
 
         public IMongoCollection<Pedido> Pedido =>
             _database.GetCollection<Pedido>("Pedidos");

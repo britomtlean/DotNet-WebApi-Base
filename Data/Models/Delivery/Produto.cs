@@ -36,6 +36,9 @@ namespace WebApi2026.Entities
         [BsonElement("imagem")]
         public string? Imagem { get; set; }
 
+        [BsonElement("cpf")]
+        public string? Cpf { get; set; }
+
         [BsonElement("data_criacao")]
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     }

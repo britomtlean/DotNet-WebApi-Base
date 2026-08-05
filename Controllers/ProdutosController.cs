@@ -20,28 +20,37 @@ namespace WebApi2026.Controllers
         }
 
 
-        //[Authorize]
-        [HttpPost]
-        public async Task<IActionResult> TakeAndCreate([FromForm] Produto produto, IFormFile arquivo)
-        {
-            try
-            {
-                var produtos = await _service.AddProduct(produto, arquivo);
-                return Ok(produtos);
-            }
-            catch(Exception er)
-            {
-                return BadRequest(er.Message);
-            }
-        }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> SendAll()
         {
             try
             {
+                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (cpf == null) return Unauthorized();
+
                 var produtos = await _service.ReturnProducts();
+                return Ok(produtos);
+            }
+            catch (Exception er)
+            {
+                return BadRequest(er.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] Produto produto, IFormFile arquivo)
+        {
+            try
+            {
+                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+
+                if (cpf == null) return Unauthorized();
+
+                var produtos = await _service.AddProduct(produto, arquivo, cpf);
                 return Ok(produtos);
             }
             catch(Exception er)
@@ -50,13 +59,17 @@ namespace WebApi2026.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> TakeAndUpdate([FromRoute] string id, [FromForm] Produto data)
+        public async Task<IActionResult> Update([FromRoute] string id, [FromForm] Produto data)
         {
             try
             {
-                var message = await _service.UpdateProduct(id, data);
+                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (cpf == null) return Unauthorized();
+
+
+                var message = await _service.UpdateProduct(id, data, cpf);
                 return Ok(message);
             }
             catch(Exception er)
@@ -67,12 +80,16 @@ namespace WebApi2026.Controllers
         }
 
 
+        [Authorize]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
             try
             {
-                var message = await _service.DeleteProduct(id);
+                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (cpf == null) return Unauthorized();
+
+                var message = await _service.DeleteProduct(id, cpf);
                 return Ok(message);
             }
             catch (Exception er)
