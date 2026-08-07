@@ -10,15 +10,10 @@ namespace WebApi2026.Interfaces
     {
         public Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo, string cpf);
 
-        public Task<List<Produto>> ReturnProducts();
+        public Task<List<Produto>?> ReturnProducts(string cpf);
 
-        public Task<Object> UpdateProduct(string id, Produto update, string cpf);
+        public Task<Produto?> UpdateProduct(string id, Produto update, string cpf);
 
-        public Task<bool> DeleteProduct(string id, string cpf);
-
-
-        //public Task<bool> Up(Produto produto);
-
-       // public Task<bool> Down(Produto produto);
+        public Task<string> DeleteProduct(string id, string cpf);
     }
 }
