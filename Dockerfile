@@ -9,6 +9,7 @@ RUN dotnet restore
 # Copia todo o restante
 COPY . .
 
+
 # Publica a aplicação
 RUN dotnet publish -c Release -o /app/publish
 
