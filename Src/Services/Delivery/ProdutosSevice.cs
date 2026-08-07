@@ -33,17 +33,18 @@ namespace WebApi2026.Services
             var diretorioImagem = await _files.Download(arquivo);
             */
 
-            var diretorioImagem = await _cloudinary.UploadImageAsync(arquivo);
+            string diretorioImagem = await _cloudinary.UploadImageAsync(arquivo);
 
             await _produtosCollection.InsertOneAsync(
                 new Produto
                 {
                     Nome = produto.Nome,
-                    Descricao = produto.Descricao,
-                    Valor = produto.Valor,
-                    Categoria = produto.Categoria,
-                    Estoque = produto.Estoque,
                     Cpf = cpf,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    Valor = produto.Valor,
+                    Estoque = produto.Estoque,
+                    Disponibilidade = produto.Disponibilidade,
                     Imagem = diretorioImagem
                 }
             );
@@ -55,20 +56,28 @@ namespace WebApi2026.Services
                 return produtos;
         }
 
-        public  Task<List<Produto>> ReturnProducts()
+        public  Task<List<Produto>?> ReturnProducts(string cpf)
         {
-            var produtos = this._produtosCollection.Find(_ => true).ToListAsync();
+            var produtos = this._produtosCollection.Find(p => p.Cpf == cpf).ToListAsync();
 
             return produtos;
         }
 
-        public async Task<Object> UpdateProduct(string id, Produto update, string cpf)
+        public async Task<Produto?> UpdateProduct(string id, Produto update, string cpf)
         {
-            var produto = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
+            //VEIRIFICA SE EXISTE
+            var produtoExiste = await _produtosCollection.Find(p => p.Id == id)
                                        .FirstOrDefaultAsync();
 
-            if (produto == null)
-                return "Produto não encontrado";
+            if (produtoExiste == null) throw new Exception("Produto não encontrado");
+
+            //VEIRIFICA SE POSSUI VINCULO
+            var produtoVinculado = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
+                                       .FirstOrDefaultAsync();
+
+            if (produtoVinculado == null) throw new Exception("Você não possui autorização para fazer alterações nesse produto");
+
+            //VALIDAÇÃO BEM SUCEDIDA
 
             var updateDefinition = Builders<Produto>.Update
                 .Set(p => p.Disponibilidade, update.Disponibilidade)
@@ -81,17 +90,33 @@ namespace WebApi2026.Services
                 updateDefinition
             );
 
-            produto = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
+            produtoVinculado = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
                                        .FirstOrDefaultAsync();
 
-            return new {produto};
+            return produtoVinculado;
         }
 
-        public async Task<bool> DeleteProduct(string id, string cpf)
+        public async Task<string> DeleteProduct(string id, string cpf)
         {
+
+            //VEIRIFICA SE EXISTE
+            var produtoExiste = await _produtosCollection.Find(p => p.Id == id)
+                                       .FirstOrDefaultAsync();
+
+            if (produtoExiste == null) throw new Exception("Produto não encontrado");
+
+            //VEIRIFICA SE POSSUI VINCULO
+            var produtoVinculado = await _produtosCollection.Find(p => p.Id == id && p.Cpf == cpf)
+                                       .FirstOrDefaultAsync();
+
+            if (produtoVinculado == null) throw new Exception("Você não possui autorização para fazer alterações nesse produto");
+
+
+            //VALIDAÇÃO BEM SUCEDIDA
+
             await _produtosCollection.DeleteOneAsync(p => p.Id == id && p.Cpf == cpf);
 
-            return true;
+            return "Produto deletado com sucesso";
         }
     }
 }

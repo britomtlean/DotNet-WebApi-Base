@@ -14,15 +14,19 @@ namespace WebApi2026.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("nome")]
         [Required]
+        [BsonElement("nome")]
         public string Nome { get; set; } = null!;
 
+        [Required]
+        [BsonElement("cpf")]
+        public string Cpf { get; set; } = "";
+
         [BsonElement("descricao")]
-        public string? Descricao { get; set; }
+        public string Descricao { get; set; } = "";
 
         [BsonElement("categoria")]
-        public string? Categoria { get; set; }
+        public string Categoria { get; set; } = "";
 
         [BsonElement("valor")]
         public decimal Valor { get; set; } = 0;
@@ -34,10 +38,7 @@ namespace WebApi2026.Entities
         public bool Disponibilidade { get; set; } = true;
 
         [BsonElement("imagem")]
-        public string? Imagem { get; set; }
-
-        [BsonElement("cpf")]
-        public string? Cpf { get; set; }
+        public string Imagem { get; set; } = "";
 
         [BsonElement("data_criacao")]
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;

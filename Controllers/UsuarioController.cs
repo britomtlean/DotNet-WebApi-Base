@@ -27,14 +27,23 @@ namespace WebApi2026.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetUnique()
         {
-            var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-            var usuario = await _service.GetUnique(cpf);
+            try
+            {
+                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
 
-            if (usuario == null)
-                return NotFound(new { mensagem = "Usuário não encontrado" });
+                var usuario = await _service.GetUnique(cpf);
 
+                if (usuario == null) throw new Exception("Usuário não encontrado");
 
-            return Ok(usuario);
+                return Ok(usuario);
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.ToString());
+                return BadRequest(er.Message);
+            }
+
         }
     }
 }

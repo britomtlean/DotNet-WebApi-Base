@@ -45,7 +45,7 @@ namespace WebApi2026.Services
             }
 
             var token = _tokenSettings.GerarToken(loginTrue.Cpf);
-            Console.WriteLine($"USUÁRIO {login.Cpf} AUTENTICADO COM SUCESSO");
+            Console.WriteLine($"USUÁRIO {login.Cpf} AUTENTICADO");
             return token;
         }
 
@@ -76,7 +76,7 @@ namespace WebApi2026.Services
             return new
             {
                 mensagem = "Usuario criado com sucesso",
-                id = newUser.Id
+                cpf = newUser.Cpf
             };
         }
     }

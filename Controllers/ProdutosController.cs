@@ -28,13 +28,14 @@ namespace WebApi2026.Controllers
             try
             {
                 var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) return Unauthorized();
+                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
 
-                var produtos = await _service.ReturnProducts();
+                var produtos = await _service.ReturnProducts(cpf);
                 return Ok(produtos);
             }
             catch (Exception er)
             {
+                Console.WriteLine(er.ToString());
                 return BadRequest(er.Message);
             }
         }
@@ -47,14 +48,14 @@ namespace WebApi2026.Controllers
             try
             {
                 var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-
-                if (cpf == null) return Unauthorized();
+                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
 
                 var produtos = await _service.AddProduct(produto, arquivo, cpf);
                 return Ok(produtos);
             }
             catch(Exception er)
             {
+                Console.WriteLine(er.ToString());
                 return BadRequest(er.Message);
             }
         }
@@ -66,7 +67,7 @@ namespace WebApi2026.Controllers
             try
             {
                 var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) return Unauthorized();
+                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
 
 
                 var message = await _service.UpdateProduct(id, data, cpf);
@@ -87,7 +88,7 @@ namespace WebApi2026.Controllers
             try
             {
                 var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) return Unauthorized();
+                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
 
                 var message = await _service.DeleteProduct(id, cpf);
                 return Ok(message);
