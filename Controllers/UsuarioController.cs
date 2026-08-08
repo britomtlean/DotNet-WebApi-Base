@@ -29,10 +29,10 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
+                var user = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var usuario = await _service.GetUnique(cpf);
+                var usuario = await _service.GetUnique(user);
 
                 if (usuario == null) throw new Exception("Usuário não encontrado");
 

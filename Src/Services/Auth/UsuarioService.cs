@@ -21,9 +21,9 @@ namespace WebApi2026.Services
             _usuarios = context.Usuarios;
         }
 
-        public async Task<Usuario?> GetUnique(string cpf)
+        public async Task<Usuario?> GetUnique(string login)
         {
-            return await _usuarios.Find(u => u.Cpf == cpf).FirstOrDefaultAsync();
+            return await _usuarios.Find(u => u.User == login).FirstOrDefaultAsync();
         }
 
     }

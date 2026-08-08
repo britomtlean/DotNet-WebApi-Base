@@ -7,7 +7,7 @@ namespace WebApi2026.Types
 {
     public class Login
     {
-        public string Cpf { get; set; }
+        public string User { get; set; }
         public string Password { get; set; }
     }
 }

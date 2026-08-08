@@ -22,12 +22,12 @@ namespace WebApi2026.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Usuario newUser)
+        public async Task<IActionResult> Register([FromBody] Usuario newLogin)
         {
             try
             {
 
-            var message = await _service.Register(newUser);
+            var message = await _service.Register(newLogin);
             return Ok(message);
 
             }
