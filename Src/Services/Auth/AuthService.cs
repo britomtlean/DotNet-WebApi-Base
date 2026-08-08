@@ -29,14 +29,14 @@ namespace WebApi2026.Services
         public async Task<string> Login(Login login)
         {
             Console.WriteLine("SOLICITAÇÃO DE LOGIN:");
-            Console.WriteLine($"CPF: {login.Cpf}");
+            Console.WriteLine($"Usuario: {login.User}");
 
-            var loginTrue = await _usuario.Find(user => user.Cpf == login.Cpf).FirstOrDefaultAsync();
+            var loginTrue = await _usuario.Find(loginDb => loginDb.User == login.User).FirstOrDefaultAsync();
 
 
             if (loginTrue == null)
             {
-                throw new Exception("Cpf não encontrado");
+                throw new Exception("Usuario não encontrado");
             }
 
             if (loginTrue.Senha != login.Password)
@@ -44,39 +44,39 @@ namespace WebApi2026.Services
                 throw new Exception("Senha incorreta!");
             }
 
-            var token = _tokenSettings.GerarToken(loginTrue.Cpf);
-            Console.WriteLine($"USUÁRIO {login.Cpf} AUTENTICADO");
+            var token = _tokenSettings.GerarToken(loginTrue.User);
+            Console.WriteLine($"USUÁRIO {login.User} AUTENTICADO");
             return token;
         }
 
 
-        public async Task<Object> Register(Usuario newUser)
+        public async Task<Object> Register(Usuario newLogin)
         {
 
             Console.WriteLine("Dados recebidos:");
-            Console.WriteLine($"CPF:{newUser.Cpf}");
-            Console.WriteLine($"Nome:{newUser.Nome}");
-            Console.WriteLine($"Senha:{newUser.Senha}");
+            Console.WriteLine($"CPF:{newLogin.User}");
+            Console.WriteLine($"Nome:{newLogin.Nome}");
+            Console.WriteLine($"Senha:{newLogin.Senha}");
 
-            if (newUser == null)
+            if (newLogin == null)
             {
                 throw new Exception("Dados inválidos");
             }
 
             // Verificar se usuário existe
-            var usuarioExistente = await _usuario.Find(u => u.Cpf == newUser.Cpf).FirstOrDefaultAsync();
+            var usuarioExistente = await _usuario.Find(loginDb => loginDb.User == newLogin.User).FirstOrDefaultAsync();
 
             if (usuarioExistente != null)
             {
-                throw new Exception("CPF já cadastrado");
+                throw new Exception("Usuario já cadastrado");
             }
 
-            await _usuario.InsertOneAsync(newUser);
+            await _usuario.InsertOneAsync(newLogin);
 
             return new
             {
                 mensagem = "Usuario criado com sucesso",
-                cpf = newUser.Cpf
+                usuario = newLogin.User
             };
         }
     }

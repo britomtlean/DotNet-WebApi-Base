@@ -19,7 +19,7 @@ namespace WebApi2026.Settings
             _chaveSecreta = configuration["JwtSettings:Secret"]!;
         }
 
-        
+
 
         public string GerarToken(string usuario)
         {

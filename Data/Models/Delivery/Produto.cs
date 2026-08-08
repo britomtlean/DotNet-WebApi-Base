@@ -18,9 +18,8 @@ namespace WebApi2026.Entities
         [BsonElement("nome")]
         public string Nome { get; set; } = null!;
 
-        [Required]
-        [BsonElement("cpf")]
-        public string Cpf { get; set; } = "";
+        [BsonElement("login")]
+        public string Login { get; set; } = "";
 
         [BsonElement("descricao")]
         public string Descricao { get; set; } = "";
@@ -35,7 +34,7 @@ namespace WebApi2026.Entities
         public int Estoque { get; set; } = 0;
 
         [BsonElement("disponibilidade")]
-        public bool Disponibilidade { get; set; } = true;
+        public bool Disponibilidade { get; set; } = false;
 
         [BsonElement("imagem")]
         public string Imagem { get; set; } = "";

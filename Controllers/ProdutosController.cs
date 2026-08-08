@@ -20,17 +20,16 @@ namespace WebApi2026.Controllers
         }
 
 
-
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> SendAll()
         {
             try
             {
-                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
+                var user = User.Identity?.Name;
+                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var produtos = await _service.ReturnProducts(cpf);
+                var produtos = await _service.ReturnProducts(user);
                 return Ok(produtos);
             }
             catch (Exception er)
@@ -47,10 +46,10 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
+                var user = User.Identity?.Name;
+                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var produtos = await _service.AddProduct(produto, arquivo, cpf);
+                var produtos = await _service.AddProduct(produto, arquivo, user);
                 return Ok(produtos);
             }
             catch(Exception er)
@@ -66,11 +65,11 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
+                var user = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
 
-                var message = await _service.UpdateProduct(id, data, cpf);
+                var message = await _service.UpdateProduct(id, data, user);
                 return Ok(message);
             }
             catch(Exception er)
@@ -87,10 +86,10 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var cpf = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
-                if (cpf == null) throw new Exception("Erro de credenciais cadastradas");
+                var user = User.Identity?.Name;
+                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var message = await _service.DeleteProduct(id, cpf);
+                var message = await _service.DeleteProduct(id, user);
                 return Ok(message);
             }
             catch (Exception er)
