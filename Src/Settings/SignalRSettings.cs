@@ -192,6 +192,7 @@ namespace WebApi2026.Hubs
             if (con != null)
             {
                 _conn.User.Remove(con);
+                await Groups.RemoveFromGroupAsync(con.id, con.sala);
                 Console.WriteLine($"Usuário {con.id} saiu da sala {con.sala}");
             }
 
