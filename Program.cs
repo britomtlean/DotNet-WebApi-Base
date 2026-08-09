@@ -21,7 +21,6 @@ using WebApi2026.Hubs;
 using Stripe;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -93,7 +92,7 @@ builder.Services.AddHttpClient("apiPDF", client =>
 });
 
 
-//////////////////////////// STRIP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//////////////////////////// STRIPE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
