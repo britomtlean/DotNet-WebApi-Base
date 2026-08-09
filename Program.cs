@@ -80,7 +80,11 @@ builder.Services.AddAuthentication(options =>
 
 //////////////////////////// SIGNALR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.KeepAliveInterval = TimeSpan.FromSeconds(10);
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(15);
+});
 
 
 //////////////////////////// API'S EXTERNAS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
