@@ -90,6 +90,9 @@ namespace WebApi2026.Hubs
 
                 /////////////////////////////////////////////////////////////
 
+
+                ///////////////////////////////////////////////////////////////////
+
                 if (dados == null || string.IsNullOrWhiteSpace(dados.sala))
                 {
                     await Clients.Caller.SendAsync(
@@ -99,6 +102,30 @@ namespace WebApi2026.Hubs
 
                     throw new Exception("Dados inválidos.");
                 }
+
+                ///////////////////////////////////////////////////////////////////
+
+
+                // Cria instancia de conexção
+                var con = new Conexao { id = Context.ConnectionId, sala = dados.sala };
+
+                ////////////////////////////////////////////////////////////////
+
+                // Verifica se o id recebido já possui alguma conexão
+                if (_conn.User.Any(c => c.id == con.id))
+                {
+                    await Clients.Caller.SendAsync(
+                        "Erro",
+                        "Esta sessão ja possui uma conexão"
+                    );
+
+                    throw new Exception("Esta sessão ja possui uma conexão.");
+                }
+
+                //////////////////////////////////////////////////////////////
+
+
+                ////////////////////////////////////////////////////////////
 
                 // Verificação da chave
                 if (dados.sala == "loja")
@@ -113,22 +140,22 @@ namespace WebApi2026.Hubs
 
                         throw new Exception("Chave de acesso inválida.");
                     }
-                }
 
 
-                // Cria instancia de conexção
-                var con = new Conexao { id = Context.ConnectionId, sala = dados.sala };
+                    // Conclui conexão
+                    await Groups.AddToGroupAsync(con.id, con.sala);
+                    _conn.User.Add(con);
+                    Console.WriteLine($"{Context.ConnectionId} entrou na sala: loja");
 
-                // Verifica se o id recebido já possui alguma conexão
-                if (_conn.User.Any(c => c.id == con.id))
-                {
                     await Clients.Caller.SendAsync(
-                        "Erro",
-                        "Esta sessão ja possui uma conexão"
+                        "Conectado",
+                        "Conexão bem sucedida"
                     );
 
-                    throw new Exception("Esta sessão ja possui uma conexão.");
+                    return;
                 }
+
+                //////////////////////////////////////////////////////////
 
                 // Conclui conexão
                 await Groups.AddToGroupAsync(con.id, con.sala);
