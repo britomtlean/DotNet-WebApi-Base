@@ -22,6 +22,12 @@ namespace WebApi2026.Hubs
     }
 
 
+    public class DadosSala
+    {
+        public string sala { get; set; }
+        public string? chaveAcesso { get; set; }
+    }
+
     // CONFIGURAÇÕES
     public class SignalRSettings : Hub
     {
@@ -29,11 +35,14 @@ namespace WebApi2026.Hubs
         private readonly HttpClient _httpClient;
         private readonly WebSocket _conn;
 
-        public SignalRSettings(IPedidoService service, IHttpClientFactory httpClientFactory, WebSocket connection)
+        private readonly IUsuarioService _serviceUser;
+
+        public SignalRSettings(IPedidoService service, IHttpClientFactory httpClientFactory, WebSocket connection, IUsuarioService serviceUser)
         {
             _service = service;
             _httpClient = httpClientFactory.CreateClient("apiPDF");
             _conn = connection;
+            _serviceUser = serviceUser;
         }
 
         // USUÁRIO CONECTADO
@@ -43,6 +52,105 @@ namespace WebApi2026.Hubs
 
             await base.OnConnectedAsync();
         }
+
+
+
+        // ENTRAR NA SALA
+        public async Task EntrarSala(string req)
+        {
+            try
+            {
+                DadosSala? dados;
+
+                /////////////////// VALIDAÇÃO DE OBJETO ////////////////////////////////
+
+                using (JsonDocument json = JsonDocument.Parse(req))
+                {
+                    if (json.RootElement.ValueKind == JsonValueKind.String)
+                    {
+                        // "loja"
+                        dados = new DadosSala
+                        {
+                            sala = json.RootElement.GetString()!,
+                            chaveAcesso = null
+                        };
+                    }
+                    else if (json.RootElement.ValueKind == JsonValueKind.Object)
+                    {
+                        // { "sala": "loja", "chaveAcesso": "delivery1234" }
+                        dados = JsonSerializer.Deserialize<DadosSala>(req);
+                    }
+                    else
+                    {
+                        throw new JsonException(
+                            "O JSON deve ser uma string ou um objeto."
+                        );
+                    }
+                }
+
+                /////////////////////////////////////////////////////////////
+
+                if (dados == null || string.IsNullOrWhiteSpace(dados.sala))
+                {
+                    await Clients.Caller.SendAsync(
+                        "Erro",
+                        "Dados inválidos."
+                    );
+
+                    throw new Exception("Dados inválidos.");
+                }
+
+                // Verificação da chave
+                if (dados.sala == "loja")
+                {
+
+                    if (dados.chaveAcesso != "delivery1234")
+                    {
+                        await Clients.Caller.SendAsync(
+                            "Erro",
+                            "Chave de acesso inválida."
+                        );
+
+                        throw new Exception("Chave de acesso inválida.");
+                    }
+                }
+
+
+                // Cria instancia de conexção
+                var con = new Conexao { id = Context.ConnectionId, sala = dados.sala };
+
+                // Verifica se o id recebido já possui alguma conexão
+                if (_conn.User.Any(c => c.id == con.id))
+                {
+                    await Clients.Caller.SendAsync(
+                        "Erro",
+                        "Esta sessão ja possui uma conexão"
+                    );
+
+                    throw new Exception("Esta sessão ja possui uma conexão.");
+                }
+
+                // Conclui conexão
+                await Groups.AddToGroupAsync(con.id, con.sala);
+                _conn.User.Add(con);
+                Console.WriteLine($"{Context.ConnectionId} entrou na sala: {dados.sala}");
+            }
+            catch (JsonException)
+            {
+                await Clients.Caller.SendAsync(
+                    "Erro",
+                    "JSON inválido."
+                );
+
+                Console.WriteLine("Erro ao converter JSON.");
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.Message);
+            }
+        }
+
+
 
         // USUÁRIO DESCONECTADO
         public override async Task OnDisconnectedAsync(Exception? exception)
@@ -62,24 +170,6 @@ namespace WebApi2026.Hubs
 
             await base.OnDisconnectedAsync(exception);
 
-        }
-
-        // ENTRAR NA SALA
-        public async Task EntrarSala(string sala)
-        {
-            //ADICIONAR VERIFICAÇÃO PARA ENTRAR NA SALA 'loja'
-            await Groups.AddToGroupAsync(Context.ConnectionId, sala);
-
-            Console.WriteLine($"{Context.ConnectionId} entrou na sala: {sala}");
-
-            //CONEXAO COM ID E NOME SALA
-            var con = new Conexao{id = Context.ConnectionId, sala = sala};
-
-            //VERIFIQUE SE EXISTE ALGUMA CONEXÃO COM O ID ARMAZENADO NO LISTA
-            if (!_conn.User.Any(c => c.id == Context.ConnectionId))
-            {
-                _conn.User.Add(con);
-            }
         }
 
         // SAIR DA SALA
