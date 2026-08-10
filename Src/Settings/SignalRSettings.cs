@@ -62,7 +62,7 @@ namespace WebApi2026.Hubs
             {
                 DadosSala? dados;
 
-                /////////////////// VALIDAÇÃO DE OBJETO ////////////////////////////////
+                /////////////////// VALIDAÇÃO DE REQUISIÇÃO ////////////////////////////////
 
                 using (JsonDocument json = JsonDocument.Parse(req))
                 {
@@ -82,9 +82,12 @@ namespace WebApi2026.Hubs
                     }
                     else
                     {
-                        throw new JsonException(
-                            "O JSON deve ser uma string ou um objeto."
-                        );
+                        await Clients.Caller.SendAsync(
+                        "Erro",
+                        "Formato inválido na requisição.");
+
+                        Console.WriteLine("Formato inválido na requisição. Operação cancelada.");
+                        return;
                     }
                 }
 
@@ -97,10 +100,11 @@ namespace WebApi2026.Hubs
                 {
                     await Clients.Caller.SendAsync(
                         "Erro",
-                        "Dados inválidos."
+                        "Dados na requisição inválidos."
                     );
 
-                    throw new Exception("Dados inválidos.");
+                    Console.WriteLine("Dados na requisição inválidos. Operação cancelada.");
+                    return;
                 }
 
                 ///////////////////////////////////////////////////////////////////
@@ -116,10 +120,13 @@ namespace WebApi2026.Hubs
                 {
                     await Clients.Caller.SendAsync(
                         "Erro",
-                        "Esta sessão ja possui uma conexão"
+                        "Esta sessão ja possui uma conexão. Sua conexão será interrompida."
                     );
 
-                    throw new Exception("Esta sessão ja possui uma conexão.");
+                    Context.Abort();
+
+                    Console.WriteLine("Esta sessão ja possui uma conexão. Operação cancelada.");
+                    return;
                 }
 
                 //////////////////////////////////////////////////////////////
@@ -138,7 +145,8 @@ namespace WebApi2026.Hubs
                             "Chave de acesso inválida."
                         );
 
-                        throw new Exception("Chave de acesso inválida.");
+                        Console.WriteLine("Chave de acesso inválida. Operação cancelada.");
+                        return;
                     }
 
 
@@ -149,7 +157,7 @@ namespace WebApi2026.Hubs
 
                     await Clients.Caller.SendAsync(
                         "Conectado",
-                        "Conexão bem sucedida"
+                        "Conexão bem sucedida."
                     );
 
                     return;
@@ -173,7 +181,12 @@ namespace WebApi2026.Hubs
             }
             catch (Exception er)
             {
-                Console.WriteLine(er.Message);
+                Console.WriteLine(er);
+
+                await Clients.Caller.SendAsync(
+                    "Erro",
+                    "Erro ao realizar conexão"
+                );
             }
         }
 
@@ -203,16 +216,22 @@ namespace WebApi2026.Hubs
         // SAIR DA SALA
         public async Task SairSala(string sala)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
-            Console.WriteLine($"{Context.ConnectionId} saiu da sala: {sala}");
 
             //RETORNA CONEXAO COM ID EQUIVALENTE
             Conexao? con = _conn.User.FirstOrDefault(u => u.id == Context.ConnectionId);
 
-            if (con != null)
+            if (con == null)
             {
-                _conn.User.Remove(con);
+                await Clients.Caller.SendAsync(
+                "Erro",
+                "Você não está em nenhuma sala."
+            );
+                return;
             }
+
+            _conn.User.Remove(con);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, con.sala);
+            Console.WriteLine($"{Context.ConnectionId} saiu da sala: {con.sala}");
         }
 
 
