@@ -157,7 +157,7 @@ namespace WebApi2026.Hubs
 
                     await Clients.Caller.SendAsync(
                         "Conectado",
-                        "Conexão bem sucedida"
+                        "Conexão bem sucedida."
                     );
 
                     return;
