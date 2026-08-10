@@ -123,7 +123,7 @@ namespace WebApi2026.Hubs
                         "Esta sessão ja possui uma conexão. Sua conexão será interrompida."
                     );
 
-                    await this.OnDisconnectedAsync(null);
+                    Context.Abort();
 
                     Console.WriteLine("Esta sessão ja possui uma conexão. Operação cancelada.");
                     return;
@@ -181,7 +181,12 @@ namespace WebApi2026.Hubs
             }
             catch (Exception er)
             {
-                Console.WriteLine(er.Message);
+                Console.WriteLine(er);
+
+                await Clients.Caller.SendAsync(
+                    "Erro",
+                    "Erro ao realizar conexão"
+                );
             }
         }
 
@@ -211,16 +216,22 @@ namespace WebApi2026.Hubs
         // SAIR DA SALA
         public async Task SairSala(string sala)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, sala);
-            Console.WriteLine($"{Context.ConnectionId} saiu da sala: {sala}");
 
             //RETORNA CONEXAO COM ID EQUIVALENTE
             Conexao? con = _conn.User.FirstOrDefault(u => u.id == Context.ConnectionId);
 
-            if (con != null)
+            if (con == null)
             {
-                _conn.User.Remove(con);
+                await Clients.Caller.SendAsync(
+                "Erro",
+                "Você não está em nenhuma sala."
+            );
+                return;
             }
+
+            _conn.User.Remove(con);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, con.sala);
+            Console.WriteLine($"{Context.ConnectionId} saiu da sala: {con.sala}");
         }
 
 
