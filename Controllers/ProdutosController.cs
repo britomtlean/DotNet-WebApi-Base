@@ -98,5 +98,41 @@ namespace WebApi2026.Controllers
                 return BadRequest(er.Message);
             }
         }
+
+
+
+
+        [Authorize]
+        [HttpPut("entrada/{id}")]
+        public async Task<IActionResult> EntradaEstoque([FromRoute] string id, [FromForm] int quantidade)
+        {
+            try
+            {
+                var msg = await _service.Increment(id, quantidade);
+                return Ok(msg);
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.ToString());
+                return BadRequest(er.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpPut("saida/{id}")]
+        public async Task<IActionResult> SaidaProduto([FromRoute] string id, [FromForm] int quantidade)
+        {
+            try
+            {
+                var msg = await _service.Decrement(id, quantidade);
+                return Ok(msg);
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.ToString());
+                return BadRequest(er.Message);
+            }
+        }
     }
 }
