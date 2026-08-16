@@ -17,11 +17,16 @@ namespace WebApi2026.Controllers
     {
         private readonly IPedidoService _service;
         private readonly IHubContext<SignalRSettings> _hub;
+        private readonly HttpClient _httpClient;
 
-        public PedidoController(IPedidoService service, IHubContext<SignalRSettings> hub)
+        private readonly IProdutosService _serviceProduto;
+
+        public PedidoController(IPedidoService service, IHubContext<SignalRSettings> hub, IHttpClientFactory httpClientFactory, IProdutosService serviceProduto)
         {
             _service = service;
             _hub = hub;
+            _httpClient = httpClientFactory.CreateClient("apiPDF");
+            _serviceProduto = serviceProduto;
         }
 
 
@@ -40,12 +45,39 @@ namespace WebApi2026.Controllers
             }
         }
 
-        [HttpPut("confirmar")]
-        public async Task<IActionResult> ConfirmarPedido(Pedido pedido)
+        [HttpPut("confirmar/{id}")]
+        public async Task<IActionResult> ConfirmarPedido([FromRoute] string id)
         {
             try
             {
-                var service = await this._service.ConfirmarPedido(pedido);
+                var pedido = await this._service.ConfirmarPedido(id);
+
+                try
+                {
+                    var res = await _httpClient.PostAsJsonAsync("gerarPDF", pedido);
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("Erro ao gerar pdf");
+                        Console.WriteLine(await res.Content.ReadAsStringAsync());
+                        throw new Exception("Erro ao gerar PDF. Pedido cancelado");
+                    }
+                }
+                catch(Exception er)
+                {
+                    Console.WriteLine(er.ToString());
+
+                    await this._service.CancelarPedido(id);
+                    await _serviceProduto.EntradaEstoque(pedido.Produtos);
+
+                    await _hub.Clients
+                        .Group($"{pedido.ContatoCliente}")
+                        .SendAsync(
+                            "ReceiveMessage",
+                            $"Pedido cancelado!"
+                        );
+                    throw new Exception(er.Message);
+                }
 
                 await _hub.Clients
                     .Group($"{pedido.ContatoCliente}")
@@ -58,16 +90,17 @@ namespace WebApi2026.Controllers
             }
             catch(Exception er)
             {
+                Console.WriteLine(er.ToString());
                 return BadRequest(er.Message);
             }
         }
 
-        [HttpPut("cancelar")]
-        public async Task<IActionResult> CancelarPedido(Pedido pedido)
+        [HttpPut("cancelar/{id}")]
+        public async Task<IActionResult> CancelarPedido([FromRoute] string id)
         {
             try
             {
-                var service = await this._service.CancelarPedido(pedido);
+                var pedido = await this._service.CancelarPedido(id);
 
                 await _hub.Clients
                     .Group($"{pedido.ContatoCliente}")

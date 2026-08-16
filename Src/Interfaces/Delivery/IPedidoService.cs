@@ -11,9 +11,9 @@ namespace WebApi2026.Interfaces
     {
         public Task<Boolean> AdicionarPedido(Pedido pedido);
 
-        public Task<Boolean> ConfirmarPedido(Pedido pedido);
+        public Task<Pedido> ConfirmarPedido(string id);
 
-        public Task<Boolean> CancelarPedido(Pedido pedido);
+        public Task<Pedido> CancelarPedido(string id);
 
         public Task<List<Pedido>> RetornarPedido();
 

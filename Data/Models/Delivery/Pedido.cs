@@ -21,9 +21,9 @@ namespace WebApi2026.Entities
         public double ValorTotal { get; set; }
 
         /////////////// RECEBE NULL \\\\\\\\\\\\\\\\\\\\\\\
-        public bool? Status { get; set; }
+        public bool? Status { get; set; } = null;
 
-        public string? StatusEntrega { get; set; }
+        public string? StatusEntrega { get; set; } = "Aguardando confirmação";
 
         //Aguardando confirmação -- Pedido criado
         //Em andamento -- Pago Online ou loja confirmou

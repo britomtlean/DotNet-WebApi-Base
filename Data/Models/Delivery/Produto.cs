@@ -19,7 +19,7 @@ namespace WebApi2026.Entities
         public string Nome { get; set; } = null!;
 
         [BsonElement("login")]
-        public string Login { get; set; } = "";
+        public string Login { get; set; } = null!;
 
         [BsonElement("descricao")]
         public string Descricao { get; set; } = "";

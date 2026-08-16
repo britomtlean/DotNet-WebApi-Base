@@ -118,5 +118,22 @@ namespace WebApi2026.Services
 
             return "Produto deletado com sucesso";
         }
+
+        public async Task EntradaEstoque(List<ProdutoPedido> produtos)
+        {
+            foreach (var array in produtos)
+            {
+                await _produtosCollection.UpdateOneAsync(p => p.Id == array.ProdutoId, Builders<Produto>.Update.Inc(p => p.Estoque, array.Quantidade));
+            }
+
+        }
+
+        public async Task SaidaEstoque(List<ProdutoPedido> produtos)
+        {
+            foreach (var array in produtos)
+            {
+                await _produtosCollection.UpdateOneAsync(p => p.Id == array.ProdutoId, Builders<Produto>.Update.Inc(p => p.Estoque, -array.Quantidade));
+            }
+        }
     }
 }
