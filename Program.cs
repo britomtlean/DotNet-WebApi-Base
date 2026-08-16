@@ -109,6 +109,7 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProdutosService, ProdutosService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<IPromocoesService, PromocoesService>();
 
 // SETTINGS
 builder.Services.AddScoped<FilesSettings>();
