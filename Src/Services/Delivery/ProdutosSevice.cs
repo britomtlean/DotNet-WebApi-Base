@@ -132,8 +132,38 @@ namespace WebApi2026.Services
         {
             foreach (var array in produtos)
             {
+                Produto produto = await _produtosCollection.Find(p => p.Id == array.ProdutoId).FirstOrDefaultAsync();
+
+                if(produto.Estoque < array.Quantidade) throw new Exception($"Estoque do produto {produto.Nome} indisponível");
+
                 await _produtosCollection.UpdateOneAsync(p => p.Id == array.ProdutoId, Builders<Produto>.Update.Inc(p => p.Estoque, -array.Quantidade));
             }
+        }
+
+
+
+
+
+        public async Task<string> Increment(string id, int quantidade)
+        {
+            Produto produto = await _produtosCollection.Find(p => p.Id == id).FirstOrDefaultAsync();
+
+            if (produto == null) throw new Exception("Produto não encontrado.");
+
+            await _produtosCollection.UpdateOneAsync(p => p.Id == produto.Id, Builders<Produto>.Update.Inc(p => p.Estoque, quantidade));
+
+            return "Estoque atualizado";
+        }
+
+        public async Task<string> Decrement(string id, int quantidade)
+        {
+            var produto = await _produtosCollection.Find(p => p.Id == id).FirstOrDefaultAsync();
+
+            if(produto == null) throw new Exception("Produto não encontrado.");
+
+            await _produtosCollection.UpdateOneAsync(p => p.Id == produto.Id, Builders<Produto>.Update.Inc(p => p.Estoque, -quantidade));
+
+            return "Estoque atualizado";
         }
     }
 }

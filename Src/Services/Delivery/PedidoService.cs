@@ -70,8 +70,19 @@ namespace WebApi2026.Services
                 p => p.Id == id,
                 Builders<Pedido>.Update.Set(p => p.Status, true)
             );
+            try
+            {
+                await _service.SaidaEstoque(pedido.Produtos);
+            }
+            catch(Exception er)
+            {
+                await _pedido.UpdateOneAsync(
+                p => p.Id == id,
+                Builders<Pedido>.Update.Set(p => p.Status, false));
 
-            await _service.SaidaEstoque(pedido.Produtos);
+                throw new Exception(er.Message);
+
+            }
 
             return pedido;
         }
@@ -81,6 +92,11 @@ namespace WebApi2026.Services
             var pedido = await this.PedidoId(id);
 
             if (pedido.Status == false) throw new Exception("Este pedido ja foi cancelado.");
+
+            if(pedido.Status == true)
+            {
+                await _service.EntradaEstoque(pedido.Produtos);
+            }
 
             await  _pedido.UpdateOneAsync(p => p.Id == id, Builders<Pedido>.Update.Set(p => p.Status, false));
 
