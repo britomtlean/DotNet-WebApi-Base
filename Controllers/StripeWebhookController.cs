@@ -64,19 +64,19 @@ public class StripeWebhookController : ControllerBase
                 Console.WriteLine("Pagamento confirmado!");
 
                 var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
-                var dadosPedido = paymentIntent.Metadata["pedido"];
+                var idPedido = paymentIntent.Metadata["pedido"];
 
-                Pedido pedido = await this._service.PedidoId(dadosPedido);
+                Pedido pedido = await this._service.PedidoId(idPedido);
 
                 if(pedido == null)
                 {
-                    throw new Exception($"Erro ao processar pedido {dadosPedido}");
+                    throw new Exception($"Erro ao processar pedido {idPedido}");
                 }
 
                 Console.WriteLine("Dados recebidos confirmados");
 
-                var resultado = await _service.ConfirmarPedido(pedido);
-                pedido = await this._service.PedidoId(dadosPedido);
+                var resultado = await _service.ConfirmarPedido(idPedido);
+                pedido = await this._service.PedidoId(idPedido);
                 Console.WriteLine("Pedido confirmado");
 
                 await _hub.Clients

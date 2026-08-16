@@ -15,5 +15,10 @@ namespace WebApi2026.Interfaces
         public Task<Produto?> UpdateProduct(string id, Produto update, string cpf);
 
         public Task<string> DeleteProduct(string id, string cpf);
+
+        public Task EntradaEstoque(List<ProdutoPedido> produtos);
+        
+        public Task SaidaEstoque(List<ProdutoPedido> produtos);
     }
 }
+
