@@ -264,7 +264,7 @@ namespace WebApi2026.Hubs
                     {
                         Console.WriteLine("Status da Loja: Online");
 
-                        var confirm = await this._service.AdicionarPedido(pedido);
+                        await this._service.AdicionarPedido(pedido);
                         Console.WriteLine($"Pedido {pedido.Id} gerado com sucesso");
 
                         // ENVIA SOMENTE PARA LOJA

@@ -45,5 +45,29 @@ namespace WebApi2026.Controllers
             }
 
         }
+
+        ////////////
+
+
+        [Authorize]
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromForm] Usuario dados)
+        {
+            try
+            {
+                var user = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
+
+
+                var message = await _service.UpdateUser(user, dados);
+                return Ok(message);
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.ToString());
+                return BadRequest(er.Message);
+            }
+        }
+
     }
 }

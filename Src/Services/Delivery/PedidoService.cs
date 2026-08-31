@@ -34,7 +34,7 @@ namespace WebApi2026.Services
 
                 if (produtoExiste == null || produtoExiste.Estoque < array.Quantidade)
                 {
-                    throw new Exception($"Produto do pedido indisponível");
+                    throw new Exception($"Produto {array.Nome} indisponível");
                 }
 
             }
@@ -78,7 +78,7 @@ namespace WebApi2026.Services
             {
                 await _pedido.UpdateOneAsync(
                 p => p.Id == id,
-                Builders<Pedido>.Update.Set(p => p.Status, false));
+                Builders<Pedido>.Update.Set(p => p.Status, null));
 
                 throw new Exception(er.Message);
 
@@ -96,9 +96,13 @@ namespace WebApi2026.Services
             if(pedido.Status == true)
             {
                 await _service.EntradaEstoque(pedido.Produtos);
+                await _pedido.UpdateOneAsync(p => p.Id == id, Builders<Pedido>.Update.Set(p => p.Status, null));
+                pedido = await this.PedidoId(id);
+                return pedido;
             }
 
             await  _pedido.UpdateOneAsync(p => p.Id == id, Builders<Pedido>.Update.Set(p => p.Status, false));
+            pedido = await this.PedidoId(id);
 
             return pedido;
         }
