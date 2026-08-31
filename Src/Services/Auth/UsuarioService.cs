@@ -26,5 +26,30 @@ namespace WebApi2026.Services
             return await _usuarios.Find(u => u.User == login).FirstOrDefaultAsync();
         }
 
+        /////
+
+        public async Task<bool> UpdateUser(string login, Usuario dados)
+        {
+
+            var user = await _usuarios.Find(u => u.User == login).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            var updateDefinition = Builders<Usuario>.Update
+                .Set(u => u.Descricao, dados.Descricao)
+                .Set(u => u.Endereco, dados.Endereco)
+                .Set(u => u.Horario, dados.Horario)
+                .Set(u => u.Instagram, dados.Instagram)
+                .Set(u => u.WhatsApp, dados.WhatsApp);
+
+            await _usuarios.UpdateOneAsync(
+                u => u.User == login,
+                updateDefinition
+            );
+            return true;
+        }
     }
 }

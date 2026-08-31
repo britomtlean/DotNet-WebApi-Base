@@ -68,23 +68,8 @@ namespace WebApi2026.Controllers
                     Console.WriteLine(er.ToString());
 
                     await this._service.CancelarPedido(id);
-                    //await _serviceProduto.EntradaEstoque(pedido.Produtos);
-
-                    await _hub.Clients
-                        .Group($"{pedido.ContatoCliente}")
-                        .SendAsync(
-                            "ReceiveMessage",
-                            $"Pedido cancelado!"
-                        );
                     throw new Exception(er.Message);
                 }
-
-                await _hub.Clients
-                    .Group($"{pedido.ContatoCliente}")
-                    .SendAsync(
-                        "ReceiveMessage",
-                        $"Pedido confirmado!"
-                    );
 
                 return Ok("Pedido confirmado com sucesso!");
             }
