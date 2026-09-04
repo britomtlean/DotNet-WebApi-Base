@@ -21,7 +21,7 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="Stripe.net" Version="51.2.0" />
 
-    <Content Include="Public\**\*">
+    <Content Include="Src\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
   </ItemGroup>
