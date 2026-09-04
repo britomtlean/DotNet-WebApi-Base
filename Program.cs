@@ -110,6 +110,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProdutosService, ProdutosService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IPromocoesService, PromocoesService>();
+builder.Services.AddScoped<IPedidoClienteService, PedidoClienteService>();
 
 // SETTINGS
 builder.Services.AddScoped<FilesSettings>();
@@ -151,6 +152,7 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(
         Path.Combine(
             Directory.GetCurrentDirectory(),
+            "Src",
             "Public",
             "Images"
         )

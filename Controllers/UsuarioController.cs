@@ -29,7 +29,7 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var user = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                var user = User.Identity?.Name; //EXTRAI O USER CONTIDO NO TOKEN
                 if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
                 var usuario = await _service.GetUnique(user);
@@ -46,8 +46,6 @@ namespace WebApi2026.Controllers
 
         }
 
-        ////////////
-
 
         [Authorize]
         [HttpPut("update")]
@@ -55,7 +53,7 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var user = User.Identity?.Name; //EXTRAI O CPF CONTIDO NO TOKEN
+                var user = User.Identity?.Name; //EXTRAI O USER CONTIDO NO TOKEN
                 if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
 
 

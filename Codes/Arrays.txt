@@ -1,0 +1,15 @@
+
+var numeros = new List<int> { 5, 10, 15, 20, 25 };
+
+
+foreach (var num in numeros)
+{
+    Console.WriteLine(num);
+}
+
+
+array.Select(item => item.Nome).ToList(); -- map
+array.Where(item => item.Quantidade > 10).ToList(); -- filter
+array.Aggregate(0, (acumulador, numero) => acumulador + numero); -- reduce
+array.FirstOrDefaultAsync(); -- find
+

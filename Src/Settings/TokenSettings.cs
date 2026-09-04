@@ -33,7 +33,7 @@ namespace WebApi2026.Settings
                 new Claim(ClaimTypes.Name, usuario),
                 new Claim(ClaimTypes.Role, "Admin") // se quiser roles
             }),
-                Expires = DateTime.UtcNow.AddHours(2), // expiração do token
+                Expires = DateTime.UtcNow.AddHours(16), // expiração do token
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature
