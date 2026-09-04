@@ -18,6 +18,10 @@ namespace WebApi2026.Entities
         [BsonElement("nome")]
         public string Nome { get; set; } = null!;
 
+        [BsonElement("codigoBarra")]
+        public List<string> CodigoBarra { get; set; } = new();
+
+        [Required]
         [BsonElement("login")]
         public string Login { get; set; } = null!;
 

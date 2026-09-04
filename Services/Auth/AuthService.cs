@@ -54,7 +54,7 @@ namespace WebApi2026.Services
         {
 
             Console.WriteLine("Dados recebidos:");
-            Console.WriteLine($"CPF:{newLogin.User}");
+            Console.WriteLine($"User:{newLogin.User}");
             Console.WriteLine($"Nome:{newLogin.Nome}");
             Console.WriteLine($"Senha:{newLogin.Senha}");
 

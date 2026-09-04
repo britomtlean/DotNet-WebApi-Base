@@ -10,7 +10,6 @@ namespace WebApi2026.Services
     {
         private readonly IMongoCollection<Produto> _produtosCollection;
         private readonly FilesSettings _files;
-
         private readonly CloudinarySettings _cloudinary;
 
         public ProdutosService(AppDbContext context, FilesSettings files, CloudinarySettings cloudinary)
@@ -19,6 +18,10 @@ namespace WebApi2026.Services
             _files = files;
             _cloudinary = cloudinary;
         }
+
+
+
+        //**************************** FUNCTIONS *****************************//
 
         public async Task<List<Produto>> AddProduct(Produto produto, IFormFile arquivo, string login)
         {

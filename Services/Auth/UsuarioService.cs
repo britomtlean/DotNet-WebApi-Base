@@ -49,6 +49,7 @@ namespace WebApi2026.Services
                 u => u.User == login,
                 updateDefinition
             );
+
             return true;
         }
     }
