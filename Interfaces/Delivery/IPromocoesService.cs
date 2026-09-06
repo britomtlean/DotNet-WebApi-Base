@@ -9,8 +9,8 @@ namespace WebApi2026.Interfaces
 {
     public interface IPromocoesService
     {
-        public Task<List<Promocoes>> CriarPromocao(IFormFile file, Promocoes promocao, string login);
+        public Task<Promocoes?> CriarPromocao(IFormFile file, Promocoes promocao);
 
-        public Task<List<Promocoes>?> ReturnPromocoes(string cpf);
+        public Task<List<Promocoes>?> ReturnPromocoes(string login);
     }
 }

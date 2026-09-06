@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
@@ -13,16 +14,15 @@ namespace WebApi2026.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("login")]
+        public string? Imagem { get; set; }
+
+        // REQUISIÇÃO
+
+        [Required]
         public string Login { get; set; } = null!;
 
-        [BsonElement("descricao")]
         public string? Descricao { get; set; } = "";
 
-        [BsonElement("enderecoDaImagem")]
-        public string? EnderecoDaImagem { get; set; } = "";
-
-        [BsonElement("visibilidade")]
         public bool? Visibilidade { get; set; } = false;
 
     }

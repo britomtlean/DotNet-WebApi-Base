@@ -37,5 +37,8 @@ namespace WebApi2026.Context
         public IMongoCollection<PedidoCliente> pedidoCliente =>
             _database.GetCollection<PedidoCliente>("PedidoCliente");
 
+        public IMongoCollection<Categoria> categoria =>
+            _database.GetCollection<Categoria>("Categoria");
+
     }
 }

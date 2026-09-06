@@ -5,36 +5,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi2026.Interfaces;
 using WebApi2026.Entities;
 
 namespace WebApi2026.Controllers
 {
     [Route("api/[controller]")]
-    public class PedidoClienteController : Controller
+    public class CategoriaController : ControllerBase
     {
-        private readonly IPedidoClienteService _service;
+        private readonly ICategoriaService _service;
 
-        public PedidoClienteController(IPedidoClienteService service)
+        public CategoriaController(ICategoriaService service)
         {
             _service = service;
         }
 
 
-        //***************** ROTAS *************************//
+        //*********************** ROTAS ***********************//
 
         [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpPost]
+        public async Task<IActionResult> Post([FromForm] Categoria data, IFormFile file)
         {
             try
             {
-                var user = User.Identity?.Name;
-                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
+                var login = User.Identity?.Name;
+                if (login == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var response = await _service.SelectAll(user);
+                var response = await _service.Create(login, data, file);
+
                 return Ok(response);
             }
             catch(Exception er)
@@ -46,15 +47,15 @@ namespace WebApi2026.Controllers
 
 
         [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PedidoCliente data)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
             try
             {
                 var login = User.Identity?.Name;
                 if (login == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var response = await _service.Insert(login, data);
+                var response = await _service.SelectAll(login);
                 return Ok(response);
             }
             catch (Exception er)

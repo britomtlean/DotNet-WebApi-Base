@@ -23,25 +23,19 @@ namespace WebApi2026.Services
         }
 
 
-        public async Task<List<Promocoes>> CriarPromocao(IFormFile file, Promocoes promocao, string login)
+        public async Task<Promocoes?> CriarPromocao(IFormFile file, Promocoes promocao)
         {
-            string diretorioImagem = await _cloudinary.UploadImageAsync(file);
+            var diretorioImagem = await _cloudinary.UploadImageAsync(file);
 
-            await _promocoesCollection.InsertOneAsync(
-                new Promocoes
-                {
-                    Login = login,
-                    Descricao = promocao.Descricao,
-                    Visibilidade = promocao.Visibilidade,
-                    EnderecoDaImagem = diretorioImagem,
-                }
-            );
+            promocao.Imagem = diretorioImagem;
 
-            var promocoes = await _promocoesCollection
-                .Find(_ => true)
-                .ToListAsync();
+            await _promocoesCollection.InsertOneAsync(promocao);;
 
-            return promocoes;
+            var promocaoCriada = await _promocoesCollection
+                .Find(p => p.Login == promocao.Login)
+                .FirstOrDefaultAsync();
+
+            return promocaoCriada;
 
         }
 

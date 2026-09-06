@@ -24,12 +24,14 @@ namespace WebApi2026.Services
 
         public async Task<string> Insert(string login, PedidoCliente data)
         {
+            data.Login = login;
+            
             await _collection.InsertOneAsync(data);
 
             return "Produto cadastrado com sucesso";
         }
 
-        public async Task<List<PedidoCliente>> SelectAll(string login)
+        public async Task<List<PedidoCliente>?> SelectAll(string login)
         {
             var pedidos = await _collection.Find(p => p.Login == login).ToListAsync();
 

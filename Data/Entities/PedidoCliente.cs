@@ -8,10 +8,13 @@ public class PedidoCliente
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+        public string? Id { get; set; }
 
-        [Required]
-        public string Login { get; set; } = null!;
+        public DateTime Data { get; set; } = DateTime.UtcNow;
+
+        public string? Login { get; set; }
+
+        // REQUISIÇÃO
 
         [Required]
         public string Nome { get; set; } = null!;
@@ -21,8 +24,6 @@ public class PedidoCliente
 
         [Required]
         public string Produto { get; set; } = null!;
-
-        public DateTime Data { get; set; } = DateTime.UtcNow;
 
     }
 }
