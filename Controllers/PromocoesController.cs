@@ -22,17 +22,13 @@ namespace WebApi2026.Controllers
             this._service = service;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(IFormFile file, [FromForm] Promocoes promocao)
         {
             try
             {
-                var user = User.Identity?.Name;
-                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
-
-                var promocoes = await _service.CriarPromocao(file, promocao, user);
-                return Ok(promocoes);
+                var response = await _service.CriarPromocao(file, promocao);
+                return Ok(response);
             }
             catch(Exception er)
             {
@@ -47,10 +43,10 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var user = User.Identity?.Name;
-                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
+                var login = User.Identity?.Name;
+                if (login == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var promocoes = await _service.ReturnPromocoes(user);
+                var promocoes = await _service.ReturnPromocoes(login);
                 return Ok(promocoes);
             }
             catch (Exception er)

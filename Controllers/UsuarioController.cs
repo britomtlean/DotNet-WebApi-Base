@@ -29,10 +29,10 @@ namespace WebApi2026.Controllers
         {
             try
             {
-                var user = User.Identity?.Name; //EXTRAI O USER CONTIDO NO TOKEN
-                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
+                var login = User.Identity?.Name; //EXTRAI O USER CONTIDO NO TOKEN
+                if (login == null) throw new Exception("Nenhum usuário vinculado a este login");
 
-                var usuario = await _service.GetUnique(user);
+                var usuario = await _service.GetUnique(login);
 
                 if (usuario == null) throw new Exception("Usuário não encontrado");
 
@@ -49,15 +49,15 @@ namespace WebApi2026.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromForm] Usuario dados)
+        public async Task<IActionResult> Update([FromForm] Usuario dados, IFormFile file)
         {
             try
             {
-                var user = User.Identity?.Name; //EXTRAI O USER CONTIDO NO TOKEN
-                if (user == null) throw new Exception("Nenhum usuário vinculado a este login");
+                var login = User.Identity?.Name; //EXTRAI O USER CONTIDO NO TOKEN
+                if (login == null) throw new Exception("Nenhum usuário vinculado a este login");
 
 
-                var message = await _service.UpdateUser(user, dados);
+                var message = await _service.Update(login, dados, file);
                 return Ok(message);
             }
             catch (Exception er)

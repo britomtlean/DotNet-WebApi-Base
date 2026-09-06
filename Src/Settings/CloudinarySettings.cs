@@ -25,8 +25,30 @@ namespace WebApi2026.Settings
 
         public async Task<string?> UploadImageAsync(IFormFile file)
         {
-            if (file.Length == 0)
-                return null;
+            if (file == null || file.Length == 0)
+            {
+                throw new Exception("Nenhum arquivo encontrado");
+            }
+
+            var extensoesPermitidas = new[]
+            {
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp"
+            };
+
+            var extensao = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!extensoesPermitidas.Contains(extensao))
+            {
+                throw new Exception("Formato de imagem não permitido");
+            }
+
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                throw new Exception("O arquivo enviado não é uma imagem");
+            }
 
             await using var stream = file.OpenReadStream();
 

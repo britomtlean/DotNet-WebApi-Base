@@ -11,6 +11,6 @@ namespace WebApi2026.Interfaces
     {
         Task<string> Login(Login login);
 
-        Task<Object> Register(Usuario register);
+        Task<Object> Register(Login register);
     }
 }

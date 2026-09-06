@@ -111,6 +111,7 @@ builder.Services.AddScoped<IProdutosService, ProdutosService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IPromocoesService, PromocoesService>();
 builder.Services.AddScoped<IPedidoClienteService, PedidoClienteService>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 // SETTINGS
 builder.Services.AddScoped<FilesSettings>();

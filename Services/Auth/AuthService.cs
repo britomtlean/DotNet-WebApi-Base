@@ -34,12 +34,12 @@ namespace WebApi2026.Services
             var loginTrue = await _usuario.Find(loginDb => loginDb.User == login.User).FirstOrDefaultAsync();
 
 
-            if (loginTrue == null)
+            if (loginTrue == null || loginTrue.User == null)
             {
                 throw new Exception("Usuario não encontrado");
             }
 
-            if (loginTrue.Senha != login.Password)
+            if (loginTrue.Senha != login.Senha)
             {
                 throw new Exception("Senha incorreta!");
             }
@@ -50,7 +50,7 @@ namespace WebApi2026.Services
         }
 
 
-        public async Task<Object> Register(Usuario newLogin)
+        public async Task<Object> Register(Login newLogin)
         {
 
             Console.WriteLine("Dados recebidos:");
@@ -64,14 +64,21 @@ namespace WebApi2026.Services
             }
 
             // Verificar se usuário existe
-            var usuarioExistente = await _usuario.Find(loginDb => loginDb.User == newLogin.User).FirstOrDefaultAsync();
+            Usuario? usuarioExistente = await _usuario.Find(loginDb => loginDb.User == newLogin.User).FirstOrDefaultAsync();
 
             if (usuarioExistente != null)
             {
                 throw new Exception("Usuario já cadastrado");
             }
 
-            await _usuario.InsertOneAsync(newLogin);
+            Usuario user = new Usuario()
+            {
+                Nome = newLogin.Nome,
+                Senha = newLogin.Senha,
+                User = newLogin.User
+            };
+
+            await _usuario.InsertOneAsync(user);
 
             return new
             {
