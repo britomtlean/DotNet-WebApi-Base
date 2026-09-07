@@ -155,7 +155,7 @@ namespace WebApi2026.Hubs
                         // Conclui conexão
                         await Groups.AddToGroupAsync(con.id, con.sala);
                         _conn.User.Add(con);
-                        Console.WriteLine($"{Context.ConnectionId} entrou na sala: loja");
+                        Console.WriteLine($"{Context.ConnectionId} entrou na sala: {con.sala}");
 
                         await Clients.Caller.SendAsync(
                             "Conectado",
