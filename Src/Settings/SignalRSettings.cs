@@ -134,34 +134,38 @@ namespace WebApi2026.Hubs
 
                 ////////////////////////////////////////////////////////////
 
-                // Verificação da chave
-                if (dados.sala == "loja")
-                {
+                var loja = await _serviceUser.GetForLogin(dados.sala);
 
-                    if (dados.chaveAcesso != "delivery1234")
+                if (loja != null)
+                {
+                    if (dados.sala == loja.User)
                     {
+                        if (dados.chaveAcesso != "delivery1234")
+                        {
+                            await Clients.Caller.SendAsync(
+                                "Erro",
+                                "Chave de acesso inválida."
+                            );
+
+                            Console.WriteLine("Chave de acesso inválida. Operação cancelada.");
+                            return;
+                        }
+
+
+                        // Conclui conexão
+                        await Groups.AddToGroupAsync(con.id, con.sala);
+                        _conn.User.Add(con);
+                        Console.WriteLine($"{Context.ConnectionId} entrou na sala: loja");
+
                         await Clients.Caller.SendAsync(
-                            "Erro",
-                            "Chave de acesso inválida."
+                            "Conectado",
+                            "Conexão bem sucedida."
                         );
 
-                        Console.WriteLine("Chave de acesso inválida. Operação cancelada.");
                         return;
                     }
-
-
-                    // Conclui conexão
-                    await Groups.AddToGroupAsync(con.id, con.sala);
-                    _conn.User.Add(con);
-                    Console.WriteLine($"{Context.ConnectionId} entrou na sala: loja");
-
-                    await Clients.Caller.SendAsync(
-                        "Conectado",
-                        "Conexão bem sucedida."
-                    );
-
-                    return;
                 }
+
 
                 //////////////////////////////////////////////////////////
 
@@ -243,57 +247,58 @@ namespace WebApi2026.Hubs
 
             Console.WriteLine($"____________________ Pedido Recebido _________________________");
 
-            /*
-            Console.WriteLine(
-                JsonSerializer.Serialize(pedido, new JsonSerializerOptions{WriteIndented = true})
-            );
-            */
-
             Console.WriteLine($"ID do pedido: {pedido.Id}");
             Console.WriteLine("________________________________________________________");
 
 
-            // ENVIAR PARA TODOS
-            //await Clients.All.SendAsync("ReceiveMessage", pedido);
-
             try
             {
-                foreach(var sala in _conn.User)
+                if (string.IsNullOrWhiteSpace(pedido.ContatoCliente) || string.IsNullOrWhiteSpace(pedido.Loja))
                 {
-                    if (sala.sala == "loja")
-                    {
-                        Console.WriteLine("Status da Loja: Online");
-
-                        await this._service.AdicionarPedido(pedido);
-                        Console.WriteLine($"Pedido {pedido.Id} gerado com sucesso");
-
-                        // ENVIA SOMENTE PARA LOJA
-                        await Clients.Group("loja").SendAsync("ReceiveMessage", pedido);
-
-                        //ENVIA PARA CLIENTE
-                        await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", "Aguardando confirmação...");
-
-                        Console.WriteLine("Pedido enviado");
-
-                        return;
-
-                    }
-
+                    throw new Exception("Dados inválidos");
                 }
 
-                Console.WriteLine("Status da Loja: Offline");
+                var estabelecimento = await _serviceUser.GetForLogin(pedido.Loja);
 
-                await Clients.Group($"{pedido.ContatoCliente}")
+                if (estabelecimento == null)
+                {
+                    Console.WriteLine("Estabelecimento não encontrado");
+                    await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", "Estabelecimento não encontrado");
+                    return;
+                }
+
+                // Verifica se a loja está online
+                var lojaOnline = _conn.User.Any(x => x.sala == pedido.Loja);
+
+                if (!lojaOnline)
+                {
+                    Console.WriteLine("Status da Loja: Offline");
+
+                    await Clients.Group(pedido.ContatoCliente)
                         .SendAsync("ReceiveMessage", "Loja offline");
 
-                Console.WriteLine("Pedido cancelado");
+                    Console.WriteLine("Pedido cancelado");
+                    return;
+                }
 
+
+                Console.WriteLine("Loja Online");
+
+                await this._service.AdicionarPedido(pedido);
+                Console.WriteLine($"Pedido {pedido.Id} gerado com sucesso");
+
+                // ENVIA SOMENTE PARA LOJA
+                await Clients.Group(pedido.Loja).SendAsync("ReceiveMessage", pedido);
+
+                //ENVIA PARA CLIENTE
+                await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", "Aguardando confirmação...");
+
+                Console.WriteLine("Pedido enviado");
 
             }
             catch(Exception er)
             {
                 Console.WriteLine($"Excpetion: {er}");
-                await Clients.Group($"{pedido.ContatoCliente}").SendAsync("ReceiveMessage", $"{er.Message}");
             }
 
         }
