@@ -16,6 +16,8 @@ namespace WebApi2026.Entities
 
         ////////////////////////////////////////////////////
 
+        public string? Loja { get; set; }
+
         public List<ProdutoPedido> Produtos { get; set; } = new();
 
         public double ValorTotal { get; set; }

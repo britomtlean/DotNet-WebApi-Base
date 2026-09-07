@@ -40,5 +40,8 @@ namespace WebApi2026.Context
         public IMongoCollection<Categoria> categoria =>
             _database.GetCollection<Categoria>("Categoria");
 
+        public IMongoCollection<OutboxMessage> outboxMessage =>
+            _database.GetCollection<OutboxMessage>("OutboxMessage");
+
     }
 }

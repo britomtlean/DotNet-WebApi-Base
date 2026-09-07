@@ -30,6 +30,12 @@ namespace WebApi2026.Services
             return await _usuarios.Find(u => u.User == login).FirstOrDefaultAsync();
         }
 
+        public async Task<Usuario?> GetForLogin(string login)
+        {
+            var usuario = await _usuarios.Find(u => u.User == login).FirstOrDefaultAsync();
+
+            return usuario;
+        }
 
         public async Task<bool> Update(string login, Usuario dados, IFormFile file)
         {

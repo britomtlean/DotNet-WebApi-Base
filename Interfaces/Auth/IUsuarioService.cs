@@ -12,6 +12,8 @@ namespace WebApi2026.Interfaces
         Task<Usuario?> GetUnique(string id);
         // Busca um usuario pelo Id
 
+        Task<Usuario?> GetForLogin(string login);
+
         Task<bool> Update(string login, Usuario dados, IFormFile file);
     }
 }
