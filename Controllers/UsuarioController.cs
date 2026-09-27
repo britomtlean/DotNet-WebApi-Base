@@ -49,7 +49,7 @@ namespace WebApi2026.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromForm] Usuario dados, IFormFile file)
+        public async Task<IActionResult> Update([FromForm] Usuario dados)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace WebApi2026.Controllers
                 if (login == null) throw new Exception("Nenhum usuário vinculado a este login");
 
 
-                var message = await _service.Update(login, dados, file);
+                var message = await _service.Update(login, dados);
                 return Ok(message);
             }
             catch (Exception er)

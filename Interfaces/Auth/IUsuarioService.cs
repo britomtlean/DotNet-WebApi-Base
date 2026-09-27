@@ -14,6 +14,6 @@ namespace WebApi2026.Interfaces
 
         Task<Usuario?> GetForLogin(string login);
 
-        Task<bool> Update(string login, Usuario dados, IFormFile file);
+        Task<bool> Update(string login, Usuario dados);
     }
 }
