@@ -38,5 +38,7 @@ namespace WebApi2026.Entities
         public string? Logo { get; set; } = "";
 
         public string? Background { get; set; } = "";
+
+        public string? BackgroundSecond { get; set; } = "";
     }
 }

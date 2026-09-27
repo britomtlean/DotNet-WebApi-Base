@@ -37,10 +37,17 @@ namespace WebApi2026.Services
             return usuario;
         }
 
-        public async Task<bool> Update(string login, Usuario dados, IFormFile file)
+        public async Task<bool> Update(string login, Usuario dados)
         {
 
-            var imageName = await _cloudnary.UploadImageAsync(file);
+            /*
+            string? imageName = "";
+
+            if (file != null)
+            {
+                imageName = await _cloudnary.UploadImageAsync(file);
+            }
+            */
 
             var updateDefinition = Builders<Usuario>.Update
                 .Set(u => u.Descricao, dados.Descricao)
@@ -48,7 +55,9 @@ namespace WebApi2026.Services
                 .Set(u => u.Horario, dados.Horario)
                 .Set(u => u.Instagram, dados.Instagram)
                 .Set(u => u.WhatsApp, dados.WhatsApp)
-                .Set(u => u.Logo, imageName);
+                .Set(u => u.Background, dados.Background)
+                .Set(u => u.BackgroundSecond, dados.BackgroundSecond);
+                //.Set(u => u.Logo, imageName);
 
             await _usuarios.UpdateOneAsync(
                 u => u.User == login,
