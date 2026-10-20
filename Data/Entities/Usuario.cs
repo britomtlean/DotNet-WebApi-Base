@@ -25,14 +25,20 @@ namespace WebApi2026.Entities
 
         // OPCIONAL
 
+        [MaxLength(16)]
         public string? WhatsApp { get; set; } = "";
+
+        [MaxLength(20)]
 
         public string? Instagram { get; set; } = "";
 
-        public string? Descricao { get; set; } = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.";
+        [MaxLength(30)]
+        public string? Descricao { get; set; } = "";
 
+        [MaxLength(60)]
         public string? Endereco { get; set; } = "Estrada da Matriz, nº 0";
 
+        [MaxLength(60)]
         public string? Horario { get; set; } = "Segunda - Sexta: 8:00 ás 17:00 / Sábado: 8:30 ás 12:30";
 
         public string? Logo { get; set; } = "";
@@ -40,5 +46,7 @@ namespace WebApi2026.Entities
         public string? Background { get; set; } = "";
 
         public string? BackgroundSecond { get; set; } = "";
+
+        public string? Color { get; set; } = "";
     }
 }
